@@ -12,9 +12,10 @@ import { OrderSide } from "opensea-js/lib/types";
 
 var customHttpProvider = new ethers.providers.Web3Provider(provider);
 customHttpProvider.send("eth_requestAccounts", []);
-
-var signer = customHttpProvider.getSigner();
-var account = signer.getAddress();
+var account: any;
+customHttpProvider.listAccounts().then((result: any) => {
+  account = result[0];
+});
 const seaport = new OpenSeaPort(provider, {
   networkName: Network.Main,
 });
@@ -29,7 +30,7 @@ chrome.runtime.onMessage.addListener(async function (
       asset_contract_address: request?.params?.assetId,
       token_id: request?.params?.tokenId,
     });
-    const accountAddress = await account;
+    const accountAddress = account;
     const transactionHash = await seaport.fulfillOrder({
       order,
       accountAddress,
