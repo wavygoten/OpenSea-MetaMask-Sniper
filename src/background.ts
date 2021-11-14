@@ -6,17 +6,16 @@ const { detect } = require("detect-browser");
 const browser = detect();
 const config = require("../config.json");
 const provider = createMetaMaskProvider();
-const Eth = require("ethjs");
+import { ethers } from "ethers";
 import { OpenSeaPort, Network } from "opensea-js";
 import { OrderSide } from "opensea-js/lib/types";
-const customHttpProvider = new Eth(provider);
-var accountAddress: any;
 
-customHttpProvider.accounts().then((accounts: any) => {
-  accountAddress = accounts[0];
-  console.log(`Detected MetaMask account ${accounts[0]}`);
-});
+var customHttpProvider = new ethers.providers.Web3Provider(provider);
 
+customHttpProvider.send("eth_requestAccounts", []);
+
+var signer = customHttpProvider.getSigner();
+var account = signer.getAddress();
 const seaport = new OpenSeaPort(provider, {
   networkName: Network.Main,
 });
@@ -31,7 +30,7 @@ chrome.runtime.onMessage.addListener(async function (
       asset_contract_address: request?.params?.assetId,
       token_id: request?.params?.tokenId,
     });
-
+    const accountAddress = await account;
     const transactionHash = await seaport.fulfillOrder({
       order,
       accountAddress,
