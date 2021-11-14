@@ -11,7 +11,6 @@ import { OpenSeaPort, Network } from "opensea-js";
 import { OrderSide } from "opensea-js/lib/types";
 
 var customHttpProvider = new ethers.providers.Web3Provider(provider);
-
 customHttpProvider.send("eth_requestAccounts", []);
 
 var signer = customHttpProvider.getSigner();
