@@ -22,8 +22,10 @@ let assetId: string;
 async function main() {
   setInterval(async () => {
     if (
-      document.location.href.includes("https://opensea.io/activity") ||
-      document.location.href.includes("https://opensea.io/collection")
+      (document.location.href.includes("https://opensea.io/activity") &&
+        document.location.href.includes("AUCTION_CREATED")) ||
+      (document.location.href.includes("https://opensea.io/collection") &&
+        document.location.href.includes("AUCTION_CREATED"))
     ) {
       let content: any = document.querySelectorAll('[role="listitem"]');
       if (content) {
@@ -47,6 +49,33 @@ async function main() {
                   .split("/")[3];
 
               return event.emit("clickedActivity");
+            };
+            element.children[0].prepend(button);
+          }
+        });
+      }
+    }
+
+    if (document.location.href.includes("https://opensea.io/collection")) {
+      let content: any = document.querySelectorAll('[role="gridcell"]');
+      if (content) {
+        content.forEach(async function (element: any, idx: number) {
+          if (
+            element.children[0].getElementsByClassName(
+              "purchase-button-collection"
+            ).length === 0
+          ) {
+            const button: HTMLButtonElement = document.createElement("button");
+            button.className = "purchase-button-collection";
+            button.innerHTML = "Cop Now";
+            button.onclick = async () => {
+              assetId = element.children[0]
+                .querySelector("a")
+                .href.split("/")[4];
+              tokenId = element.children[0]
+                .querySelector("a")
+                .href.split("/")[5];
+              return event.emit("clickedCollection");
             };
             element.children[0].prepend(button);
           }
@@ -78,6 +107,22 @@ async function main() {
 event.on("clickedActivity", async () => {
   let orderData: any = await utils.FetchOrderData(assetId, tokenId);
   console.log(orderData?.orders[0]);
+
+  if (orderData?.orders[0]?.side) {
+    await toast(true, "Initiating Quick Buy");
+    let params = {
+      assetId,
+      tokenId,
+    };
+    chrome.runtime.sendMessage({ params });
+  } else {
+    await toast(false, "Item is not listed for sale");
+  }
+});
+
+event.on("clickedCollection", async () => {
+  let orderData: any = await utils.FetchOrderData(assetId, tokenId);
+  console.log(orderData);
 
   if (orderData?.orders[0]?.side) {
     await toast(true, "Initiating Quick Buy");

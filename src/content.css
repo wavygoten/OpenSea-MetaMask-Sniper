@@ -21,11 +21,26 @@
   opacity: 0.8;
 }
 
+.purchase-button-collection {
+  font-size: large;
+  color: white;
+  padding: 6px 10px;
+  outline: none;
+  border: none;
+  background-color: #2081e2;
+  border-radius: 8px;
+  opacity: 0.8;
+}
+
 .purchase-button:hover {
   opacity: 1;
   transition: 100ms ease-in;
 }
 .purchase-button-assets:hover {
+  opacity: 1;
+  transition: 100ms ease-in;
+}
+.purchase-button-collection:hover {
   opacity: 1;
   transition: 100ms ease-in;
 }
