@@ -22,11 +22,26 @@ chrome.runtime.onMessage.addListener(async function (
 ) {
   if (request?.params) {
     console.log(request?.params);
-    const order = await seaport.api.getOrder({
-      side: OrderSide.Sell,
-      asset_contract_address: request?.params?.assetId,
-      token_id: request?.params?.tokenId,
-    });
+    const order = await seaport.api
+      .getOrder({
+        side: OrderSide.Sell,
+        asset_contract_address: request?.params?.assetId,
+        token_id: request?.params?.tokenId,
+      })
+      .catch((err: any) => {
+        if (err?.message.includes("no matching order found")) {
+          error = {
+            error: false,
+            message: "No listing found for this order",
+          };
+          chrome.tabs.query(
+            { active: true, currentWindow: true },
+            function (tabs: any) {
+              chrome.tabs.sendMessage(tabs[0].id, { error });
+            }
+          );
+        }
+      });
     const accountAddress = account;
     await seaport
       .fulfillOrder({
@@ -45,6 +60,8 @@ chrome.runtime.onMessage.addListener(async function (
             chrome.tabs.sendMessage(tabs[0].id, { success });
           }
         );
+
+        // send webhook here
       })
       .catch((err: any) => {
         console.log(err?.message);
@@ -53,6 +70,41 @@ chrome.runtime.onMessage.addListener(async function (
           error = {
             error: false,
             message: "Insufficient balance for this transaction",
+          };
+          chrome.tabs.query(
+            { active: true, currentWindow: true },
+            function (tabs: any) {
+              chrome.tabs.sendMessage(tabs[0].id, { error });
+            }
+          );
+        } else if (
+          err?.message.includes("Cannot read properties of undefined")
+        ) {
+          error = {
+            error: false,
+            message: "No listing found for this order",
+          };
+          chrome.tabs.query(
+            { active: true, currentWindow: true },
+            function (tabs: any) {
+              chrome.tabs.sendMessage(tabs[0].id, { error });
+            }
+          );
+        } else if (err?.message.includes("User denied transaction signature")) {
+          error = {
+            error: false,
+            message: "User declined the transaction",
+          };
+          chrome.tabs.query(
+            { active: true, currentWindow: true },
+            function (tabs: any) {
+              chrome.tabs.sendMessage(tabs[0].id, { error });
+            }
+          );
+        } else {
+          error = {
+            error: false,
+            message: "Please refresh and try again",
           };
           chrome.tabs.query(
             { active: true, currentWindow: true },
