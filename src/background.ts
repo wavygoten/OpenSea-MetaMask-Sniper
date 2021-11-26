@@ -15,7 +15,7 @@ var account: string;
 var seaport: any;
 var error: object;
 var success: object;
-
+var alternateSeaport: any;
 chrome.runtime.onMessage.addListener(async function (
   request: any,
   sender: any
@@ -119,12 +119,19 @@ chrome.runtime.onMessage.addListener(async function (
 
 channel.onmessage = async (msg: any) => {
   console.log(msg?.data);
+  // const WEB3_ENDPOINT = "https://cloudflare-eth.com";
+  // const { JsonRpcProvider } = ethers.providers;
+  // const cloudflareProvider = new JsonRpcProvider(WEB3_ENDPOINT);
+
   if (msg?.data) {
     const provider = createMetaMaskProvider(msg?.data);
     customHttpProvider = new ethers.providers.Web3Provider(provider);
     seaport = new OpenSeaPort(provider, {
       networkName: Network.Main,
     });
+    // alternateSeaport = new OpenSeaPort(cloudflareProvider, {
+    //   networkName: Network.Main,
+    // });
     customHttpProvider.send("eth_requestAccounts", []).then((res: any) => {
       account = res[0];
     });

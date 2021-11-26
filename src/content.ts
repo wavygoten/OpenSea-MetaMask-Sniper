@@ -1,21 +1,17 @@
 // This file is injected as a content script
-console.log("Hello from content script!");
+// console.log("Hello from content script!");
 
 import { EventEmitter } from "events";
 import "./content.css";
 const event: EventEmitter = new EventEmitter();
 import utils from "./utils/utils";
 
-console.log("Hello from content script!");
-
-var dom_observer = new MutationObserver(async function (mutation) {
-  await main();
-});
-var container = document.documentElement || document.body;
-var config = { attributes: true, childList: true, characterData: true };
-dom_observer.observe(container, config);
-
-// on load
+// var dom_observer = new MutationObserver(async function (mutation) {
+// });
+// var container = document.documentElement || document.body;
+// var config = { attributes: true, childList: true, characterData: true };
+// dom_observer.observe(container, config);
+main();
 
 let tokenId: string;
 let assetId: string;
