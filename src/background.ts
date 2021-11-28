@@ -51,7 +51,7 @@ chrome.runtime.onMessage.addListener(async function (
       })
       .then((res: any) => {
         console.log(res);
-
+        var txhash = res;
         success = {
           success: true,
           message: `Order is processing: Txhash - ${res}`,
@@ -63,6 +63,15 @@ chrome.runtime.onMessage.addListener(async function (
           }
         );
 
+        chrome.storage.local.get(["webhook"], async (res: any) => {
+          if (res?.webhook) {
+            await utils.sendWebhook(res?.webhook, {
+              title: "Test Product",
+              priceTotal: "0.420",
+              txn: txhash,
+            });
+          }
+        });
         // send webhook here
       })
       .catch((err: any) => {

@@ -27,6 +27,7 @@ const App = () => {
   const saveWebhook = async (e: any) => {
     e.preventDefault();
     channel.postMessage({ webhook: webhook });
+    chrome.storage.local.set({ webhook: webhook });
   };
 
   React.useEffect(() => {
@@ -64,7 +65,22 @@ const App = () => {
                 placeholder="Discord Webhook"
                 onChange={handleWebhookChange}
               />
-              <button onClick={saveWebhook}>Save</button>
+              <button style={{ marginLeft: "0.5rem" }} onClick={saveWebhook}>
+                Save
+              </button>
+            </div>
+            <div style={{ display: "flex" }}>
+              <input
+                type="text"
+                name="metamaskId"
+                id="metamaskinput"
+                placeholder="MetaMask Extension ID"
+                onChange={handleChange}
+              />
+
+              <button style={{ marginLeft: "0.5rem" }} onClick={click}>
+                Save
+              </button>
             </div>
             <button onClick={autoSnipe}>Open AutoSnipe</button>
           </>
