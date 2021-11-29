@@ -22,6 +22,7 @@ const App = () => {
 
   const autoSnipe = async (e: any) => {
     e.preventDefault();
+    chrome.tabs.create({ url: chrome.runtime.getURL("index.html") });
   };
   const saveWebhook = async (e: any) => {
     e.preventDefault();
