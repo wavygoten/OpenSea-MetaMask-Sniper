@@ -1,13 +1,12 @@
 import * as React from "react";
 import logo from "./logo.svg";
 import "./App.css";
-
 const App = () => {
   const channel = new BroadcastChannel("Funimation");
   const [mmid, setMmid] = React.useState<string>("");
   const [webhook, setWebhook] = React.useState<string>("");
-
   const [bool, setBool] = React.useState<boolean>();
+
   const handleChange = async (e: any) => {
     e.preventDefault();
     setMmid(e?.target?.value);
@@ -56,7 +55,6 @@ const App = () => {
           </>
         ) : (
           <>
-            {" "}
             <div style={{ display: "flex" }}>
               <input
                 type="text"

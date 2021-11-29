@@ -72,7 +72,6 @@ chrome.runtime.onMessage.addListener(async function (
             });
           }
         });
-        // send webhook here
       })
       .catch((err: any) => {
         console.log(err?.message);
@@ -125,18 +124,6 @@ chrome.runtime.onMessage.addListener(async function (
           );
         }
       });
-    seaport.addListener(EventType.TransactionDenied, () => {
-      error = {
-        error: false,
-        message: "Transaction Declined",
-      };
-      chrome.tabs.query(
-        { active: true, currentWindow: true },
-        function (tabs: any) {
-          chrome.tabs.sendMessage(tabs[0].id, { error });
-        }
-      );
-    });
   }
 });
 
@@ -169,6 +156,19 @@ channel.onmessage = async (msg: any) => {
     });
   }
 };
+
+seaport.addListener(EventType.TransactionDenied, () => {
+  error = {
+    error: false,
+    message: "Transaction Declined",
+  };
+  chrome.tabs.query(
+    { active: true, currentWindow: true },
+    function (tabs: any) {
+      chrome.tabs.sendMessage(tabs[0].id, { error });
+    }
+  );
+});
 
 function createMetaMaskProvider(mmid?: any) {
   let provider;

@@ -149,7 +149,7 @@ const _ = {
       ],
     };
 
-    await fetch(url, {
+    return await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
