@@ -2,7 +2,7 @@
   "name": "Sniper Tool",
   "description": "Snipe items on Opensea",
   "manifest_version": 2,
-  "version": "1.0.4",
+  "version": "1.0.7",
   "icons": {
     "16": "Sharingan.png",
     "48": "Sharingan.png",
@@ -16,14 +16,14 @@
     "default_popup": "popup.html"
   },
   "web_accessible_resources": ["index.html"],
-  "permissions": ["tabs", "storage"],
+  "permissions": ["tabs", "storage", "https://traitsurfer.app/api/*"],
   "background": {
     "scripts": ["background.js"],
     "persistent": true
   },
   "content_scripts": [
     {
-      "matches": ["https://opensea.io/*"],
+      "matches": ["https://opensea.io/*", "https://looksrare.org/*"],
       "js": ["content.js"],
       "all_frames": true,
       "run_at": "document_end"

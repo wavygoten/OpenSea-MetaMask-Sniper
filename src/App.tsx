@@ -3,37 +3,44 @@ import logo from "./logo.svg";
 import "./App.css";
 const App = () => {
   const channel = new BroadcastChannel("Funimation");
-  const [mmid, setMmid] = React.useState<string>("");
   const [webhook, setWebhook] = React.useState<string>("");
   const [bool, setBool] = React.useState<boolean>();
-
+  const [mmid, setMmid] = React.useState<string>("");
   const handleChange = async (e: any) => {
     e.preventDefault();
-    setMmid(e?.target?.value);
+    switch (e?.target?.name) {
+      case "discordId":
+        setWebhook(e?.target?.value);
+        break;
+      default:
+        setMmid(e?.target?.value);
+        break;
+    }
   };
-  const handleWebhookChange = async (e: any) => {
-    e.preventDefault();
-    setWebhook(e?.target?.value);
-  };
+
   const click = async (e: any) => {
     e.preventDefault();
-    channel.postMessage({ mmid: mmid });
+    switch (e?.target?.name) {
+      case "mmSave":
+        channel.postMessage({ mmid: mmid });
+        break;
+      default:
+        channel.postMessage({ webhook: webhook });
+        chrome.storage.local.set({ webhook: webhook });
+        break;
+    }
   };
 
   const autoSnipe = async (e: any) => {
     e.preventDefault();
     chrome.tabs.create({ url: chrome.runtime.getURL("index.html") });
   };
-  const saveWebhook = async (e: any) => {
-    e.preventDefault();
-    channel.postMessage({ webhook: webhook });
-    chrome.storage.local.set({ webhook: webhook });
-  };
 
   React.useEffect(() => {
     chrome.storage.local.get(["mmid"], (res: any) => {
       if (res?.mmid) {
-        setBool(res?.mmid);
+        setMmid(res.mmid);
+        setBool(true);
       }
     });
   }, []);
@@ -52,19 +59,25 @@ const App = () => {
               onChange={handleChange}
             />
 
-            <button onClick={click}>Save</button>
+            <button name="mmSave" onClick={click}>
+              Save
+            </button>
           </>
         ) : (
           <>
             <div style={{ display: "flex" }}>
               <input
                 type="text"
-                name="metamaskId"
+                name="discordId"
                 id="metamaskinput"
                 placeholder="Discord Webhook"
-                onChange={handleWebhookChange}
+                onChange={handleChange}
               />
-              <button style={{ marginLeft: "0.5rem" }} onClick={saveWebhook}>
+              <button
+                name="discordSave"
+                style={{ marginLeft: "0.5rem" }}
+                onClick={click}
+              >
                 Save
               </button>
             </div>
@@ -74,10 +87,16 @@ const App = () => {
                 name="metamaskId"
                 id="metamaskinput"
                 placeholder="MetaMask Extension ID"
+                defaultValue={mmid}
+                key={mmid}
                 onChange={handleChange}
               />
 
-              <button style={{ marginLeft: "0.5rem" }} onClick={click}>
+              <button
+                name="mmSave"
+                style={{ marginLeft: "0.5rem" }}
+                onClick={click}
+              >
                 Save
               </button>
             </div>

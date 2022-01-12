@@ -5,16 +5,13 @@ import { EventEmitter } from "events";
 import "./content.css";
 const event: EventEmitter = new EventEmitter();
 import utils from "./utils/utils";
-
-// var dom_observer = new MutationObserver(async function (mutation) {
-// });
-// var container = document.documentElement || document.body;
-// var config = { attributes: true, childList: true, characterData: true };
-// dom_observer.observe(container, config);
-main();
-
+let contentData: any[] = [];
+let contractData: string;
 let tokenId: string;
 let assetId: string;
+
+main();
+looksRare();
 async function main() {
   setInterval(async () => {
     if (
@@ -26,27 +23,74 @@ async function main() {
       let content: any = document.querySelectorAll('[role="listitem"]');
       if (content) {
         content.forEach(async function (element: any, idx: number) {
+          // buy stuff
           if (
-            element.children[0].getElementsByClassName("purchase-button")
+            element?.children[0].getElementsByClassName("purchase-button")
               .length === 0
           ) {
             const button: HTMLButtonElement = document.createElement("button");
+
             button.className = "purchase-button";
             button.innerHTML = "Cop Now";
 
             button.onclick = async () => {
-              assetId =
-                element.children[0].children[1].children[1].children[0].children[0]
-                  .getAttribute("href")
-                  .split("/")[2];
-              tokenId =
-                element.children[0].children[1].children[1].children[0].children[0]
-                  .getAttribute("href")
-                  .split("/")[3];
+              assetId = element
+                ?.querySelector("a")
+                ?.getAttribute("href")
+                .split("/")[2];
+              tokenId = element
+                ?.querySelector("a")
+                ?.getAttribute("href")
+                .split("/")[3];
 
               return event.emit("clickedActivity");
             };
-            element.children[0].prepend(button);
+            element?.children[0].prepend(button);
+            if (idx < 1) {
+              if (!contentData.includes("error")) {
+                contentData = [];
+              }
+              contractData = element
+                ?.querySelector("a")
+                ?.getAttribute("href")
+                .split("/")[2];
+              if (contentData.length === 0) {
+                chrome.runtime.sendMessage({ getContractData: true });
+              }
+            }
+          }
+          // rarity stuff
+          if (
+            element?.children[0].getElementsByClassName("rarity-container")
+              .length === 0
+          ) {
+            const rarityContainer: HTMLDivElement =
+              document.createElement("div");
+            const rarityRank: HTMLDivElement = document.createElement("div");
+            const rarityPercent: HTMLDivElement = document.createElement("div");
+            rarityContainer.className = "rarity-container";
+            rarityRank.className = "rarity-rank";
+            rarityPercent.className = "rarity-percentage";
+            rarityPercent.style.cssText = "background-color: #2081e2;";
+
+            for (let item in contentData) {
+              let temptoken: string = element
+                ?.querySelector("a")
+                ?.getAttribute("href")
+                .split("/")[3];
+              if (contentData[item]?.tokenid === temptoken) {
+                rarityRank.innerHTML = `${contentData[item]?.rank} / ${contentData.length}`;
+                rarityPercent.innerHTML = `${(
+                  (contentData[item]?.rank / contentData.length) *
+                  100
+                ).toFixed(1)} %`;
+                rarityContainer.appendChild(rarityRank);
+                rarityContainer.appendChild(rarityPercent);
+                element?.children[0]?.children[1]?.children[1]?.children[0]?.children[0]?.children[0]?.children[1].append(
+                  rarityContainer
+                );
+              }
+            }
           }
         });
       }
@@ -57,7 +101,7 @@ async function main() {
       if (content) {
         content.forEach(async function (element: any, idx: number) {
           if (
-            element.children[0].getElementsByClassName(
+            element?.children[0].getElementsByClassName(
               "purchase-button-collection"
             ).length === 0
           ) {
@@ -65,15 +109,60 @@ async function main() {
             button.className = "purchase-button-collection";
             button.innerHTML = "Cop Now";
             button.onclick = async () => {
-              assetId = element.children[0]
-                .querySelector("a")
-                .href.split("/")[4];
-              tokenId = element.children[0]
-                .querySelector("a")
-                .href.split("/")[5];
+              assetId = element?.children[0]
+                ?.querySelector("a")
+                ?.href.split("/")[4];
+              tokenId = element?.children[0]
+                ?.querySelector("a")
+                ?.href.split("/")[5];
               return event.emit("clickedCollection");
             };
-            element.children[0].prepend(button);
+            element?.children[0].prepend(button);
+            if (idx < 1) {
+              if (!contentData.includes("error")) {
+                contentData = [];
+              }
+              contractData = element?.children[0]
+                ?.querySelector("a")
+                ?.href.split("/")[4];
+              if (contentData.length === 0) {
+                chrome.runtime.sendMessage({ getContractData: true });
+              }
+            }
+          }
+          if (
+            element.children[0].getElementsByClassName("rarity-container")
+              .length === 0
+          ) {
+            const rarityContainer: HTMLDivElement =
+              document.createElement("div");
+            const rarityRank: HTMLDivElement = document.createElement("div");
+            const rarityPercent: HTMLDivElement = document.createElement("div");
+
+            rarityContainer.className = "rarity-container";
+            rarityRank.className = "rarity-rank";
+            rarityPercent.className = "rarity-percentage";
+            rarityPercent.style.cssText = "background-color: #2081e2;";
+
+            for (let item in contentData) {
+              let temptoken: string = element.children[0]
+                ?.querySelector("a")
+                ?.href.split("/")[5];
+              if (contentData[item]?.tokenid === temptoken) {
+                rarityRank.innerHTML = `${contentData[item]?.rank} / ${contentData.length}`;
+                rarityPercent.innerHTML = `${(
+                  (contentData[item]?.rank / contentData.length) *
+                  100
+                ).toFixed(1)} %`;
+                rarityContainer.appendChild(rarityRank);
+                rarityContainer.appendChild(rarityPercent);
+                element.children[0]
+                  ?.querySelector("a")
+                  ?.children[1]?.children[0]?.children[0].append(
+                    rarityContainer
+                  );
+              }
+            }
           }
         });
       }
@@ -100,6 +189,68 @@ async function main() {
       }
     }
   }, 1000);
+}
+
+async function looksRare() {
+  if (document.location.href.includes("https://looksrare.org/collections")) {
+    contentData = [];
+    var dom_observer = new MutationObserver(async function (mutation) {
+      contentData = [];
+    });
+    var container = document.documentElement || document.body;
+    var config = { attributes: true, childList: true, characterData: true };
+    dom_observer.observe(container, config);
+    setInterval(() => {
+      if (contentData.length > 0) {
+        let content: any = document.querySelectorAll(".lazyload-wrapper");
+        if (content) {
+          content.forEach(async function (element: any, idx: number) {
+            if (
+              element?.getElementsByClassName("rarity-container").length === 0
+            ) {
+              const rarityContainer: HTMLDivElement =
+                document.createElement("div");
+              const rarityRank: HTMLDivElement = document.createElement("div");
+              const rarityPercent: HTMLDivElement =
+                document.createElement("div");
+
+              rarityContainer.className = "rarity-container";
+              rarityContainer.style.cssText =
+                "margin-top: 0; border-radius: 0px; background-color: #21262A";
+              rarityRank.className = "rarity-rank";
+              rarityPercent.className = "rarity-percentage";
+              rarityPercent.style.cssText =
+                "color: #000;background-color: #2DE370;";
+              for (let item in contentData) {
+                let temptoken: string = element
+                  ?.querySelectorAll("a")[1]
+                  ?.href.split("/")[5];
+
+                if (contentData[item]?.tokenid === temptoken) {
+                  rarityRank.innerHTML = `${contentData[item]?.rank} / ${contentData.length}`;
+                  rarityPercent.innerHTML = `${(
+                    (contentData[item]?.rank / contentData.length) *
+                    100
+                  ).toFixed(1)} %`;
+                  rarityContainer.appendChild(rarityRank);
+                  rarityContainer.appendChild(rarityPercent);
+                  element?.children[0]?.prepend(rarityContainer);
+                }
+              }
+            }
+          });
+        }
+      } else {
+        if (!contentData.includes("error")) {
+          contentData = [];
+        }
+        contractData = document.location.href.split("/")[4].split("#")[0];
+        if (contentData.length === 0) {
+          chrome.runtime.sendMessage({ getContractData: true });
+        }
+      }
+    }, 1000);
+  }
 }
 
 event.on("clickedActivity", async () => {
@@ -141,6 +292,25 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
   }
   if (message?.success) {
     await toast(message?.success?.success, message?.success?.message);
+  }
+  if (message?.mainData) {
+    if (message?.mainData.length < 1) {
+      chrome.runtime.sendMessage({ contractData: contractData });
+    } else {
+      if (JSON.stringify(message?.mainData).indexOf(contractData) !== -1) {
+        for (let i: number = 0; i < message?.mainData.length; i++) {
+          if (message?.mainData[i]?.contractData === contractData) {
+            contentData = message?.mainData[i]?.data;
+          }
+        }
+      } else {
+        chrome.runtime.sendMessage({ contractData: contractData });
+      }
+      console.log(contentData);
+    }
+  }
+  if (message?.scrapeError) {
+    contentData = ["error"];
   }
 });
 

@@ -1,6 +1,6 @@
 .purchase-button {
   color: white;
-  padding: 10px 20px;
+  padding: 6px 12px;
   outline: none;
   border: none;
   background-color: #2081e2;
@@ -8,6 +8,28 @@
   opacity: 0.8;
   position: relative;
   z-index: 999;
+  font-size: 16px;
+}
+.rarity-container {
+  margin-top: 4px;
+  background-color: #111314;
+  font-size: 14px;
+  color: white;
+  white-space: nowrap;
+  min-width: 7vw;
+  display: flex;
+  border-radius: 4px;
+}
+
+.rarity-rank {
+  padding: 4px 8px;
+  flex: 1 0 auto;
+}
+.rarity-percentage {
+  padding: 4px 8px;
+  border-radius: 4px;
+  min-width: 70px;
+  text-align: center;
 }
 
 .purchase-button-assets {
@@ -22,7 +44,7 @@
 }
 
 .purchase-button-collection {
-  font-size: large;
+  font-size: medium;
   color: white;
   padding: 6px 10px;
   outline: none;
