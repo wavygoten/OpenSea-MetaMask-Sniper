@@ -1,6 +1,6 @@
 {
   "name": "chrome-extension-react-typescript-boilerplate",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -19,8 +19,10 @@
     "@types/react-dom": "^16.9.8",
     "babel-loader": "^8.1.0",
     "copy-webpack-plugin": "^6.2.1",
+    "cross-env": "^7.0.3",
     "css-loader": "^5.0.0",
     "file-loader": "^6.1.1",
+    "javascript-obfuscator": "^3.0.0",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "stream-http": "^3.2.0",
     "style-loader": "^2.0.0",
@@ -29,9 +31,12 @@
     "url-loader": "^4.1.1",
     "webpack": "^5.1.3",
     "webpack-cli": "^4.0.0",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "webpack-obfuscator": "^3.5.0"
   },
   "dependencies": {
+    "@types/d3-scale": "^4.0.2",
+    "d3-scale": "^4.0.2",
     "ethers": "^5.5.1",
     "ethjs": "^0.4.0",
     "history": "^5.1.0",
