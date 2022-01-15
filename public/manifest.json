@@ -2,7 +2,7 @@
   "name": "Sniper Tool",
   "description": "Snipe items on Opensea",
   "manifest_version": 2,
-  "version": "1.0.8",
+  "version": "1.0.9",
   "icons": {
     "16": "Sharingan.png",
     "48": "Sharingan.png",

@@ -153,11 +153,9 @@ chrome.runtime.onMessage.addListener(async function (
 });
 
 channel.onmessage = async (msg: any) => {
-  console.log(msg?.data);
   // const WEB3_ENDPOINT = "https://cloudflare-eth.com";
   // const { JsonRpcProvider } = ethers.providers;
   // const cloudflareProvider = new JsonRpcProvider(WEB3_ENDPOINT);
-
   if (msg?.data?.mmid) {
     const provider = createMetaMaskProvider(msg?.data?.mmid);
     customHttpProvider = new ethers.providers.Web3Provider(provider);
@@ -179,6 +177,28 @@ channel.onmessage = async (msg: any) => {
       priceTotal: "0.420",
       txn: "N/A",
     });
+  }
+  if (msg?.data?.params) {
+    console.log(msg?.data?.params);
+    const order = await seaport.api.getOrder({
+      side: OrderSide.Sell,
+      asset_contract_address: msg?.data?.params?.assetId,
+      token_id: msg?.data?.params?.tokenId,
+    });
+    const accountAddress = account;
+    await seaport
+      .fulfillOrder({
+        order,
+        accountAddress,
+      })
+      .then((res: any) => {
+        console.log(res);
+        var txhash = res;
+        success = {
+          success: true,
+          message: `Order is processing: Txhash - ${res}`,
+        };
+      });
   }
 };
 

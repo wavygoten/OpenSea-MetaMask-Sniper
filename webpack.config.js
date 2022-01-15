@@ -2,7 +2,7 @@ const webpack = require("webpack");
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
-
+const WebpackObfuscator = require("webpack-obfuscator");
 const config = {
   entry: {
     popup: path.join(__dirname, "src/popup.tsx"),
@@ -76,6 +76,12 @@ const config = {
       patterns: [{ from: "public", to: "." }],
     }),
     new NodePolyfillPlugin(),
+    new WebpackObfuscator(
+      {
+        rotateStringArray: true,
+      },
+      ["/node_modules/"]
+    ),
   ],
 };
 
