@@ -123,7 +123,8 @@ const _ = {
       embeds: [
         {
           color: 2123412,
-          title: "Successful Cop",
+          title: "Created TXN",
+          url: details?.url,
           fields: [
             {
               name: "Title",
@@ -142,7 +143,7 @@ const _ = {
             },
           ],
           footer: {
-            text: "Opensea Sniper",
+            text: "TraitSurfer App",
           },
           timestamp: new Date().toISOString(),
         },

@@ -3,6 +3,10 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const WebpackObfuscator = require("webpack-obfuscator");
+const createStyledComponentsTransformer =
+  require("typescript-plugin-styled-components").default;
+const styledComponentsTransformer = createStyledComponentsTransformer();
+
 const config = {
   entry: {
     popup: path.join(__dirname, "src/popup.tsx"),
@@ -27,6 +31,11 @@ const config = {
         test: /\.ts(x)?$/,
         loader: "ts-loader",
         exclude: /node_modules/,
+        options: {
+          getCustomTransformers: () => ({
+            before: [styledComponentsTransformer],
+          }),
+        },
       },
       {
         test: /\.css$/,
@@ -43,7 +52,7 @@ const config = {
         include: /\.module\.css$/,
       },
       {
-        test: /\.svg$/,
+        test: /\.(svg|mp3)$/,
         use: "file-loader",
       },
       {
@@ -76,12 +85,12 @@ const config = {
       patterns: [{ from: "public", to: "." }],
     }),
     new NodePolyfillPlugin(),
-    new WebpackObfuscator(
-      {
-        rotateStringArray: true,
-      },
-      ["/node_modules/"]
-    ),
+    // new WebpackObfuscator(
+    //   {
+    //     rotateStringArray: true,
+    //   },
+    //   ["/node_modules/"]
+    // ),
   ],
 };
 

@@ -1,6 +1,7 @@
 import * as React from "react";
-import logo from "./logo.svg";
 import "./App.css";
+import { Input, Button, Wrapper, Row, Title } from "./components";
+import styled from "styled-components/macro";
 const App = () => {
   const channel = new BroadcastChannel("Funimation");
   const [webhook, setWebhook] = React.useState<string>("");
@@ -46,65 +47,65 @@ const App = () => {
   }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h2 id="title">Sniper Tool</h2>
-        {!bool ? (
-          <>
-            <input
+    <Wrapper>
+      <Title>
+        <div>Trait Surfer</div>
+      </Title>
+      {!bool ? (
+        <>
+          <Input
+            type="text"
+            name="metamaskId"
+            id="metamaskinput"
+            placeholder="MetaMask Extension ID"
+            onChange={handleChange}
+          />
+
+          <Button name="mmSave" onClick={click}>
+            Save
+          </Button>
+        </>
+      ) : (
+        <>
+          <Row css="margin: 0.5rem 0;">
+            <Input
+              type="text"
+              name="discordId"
+              id="metamaskinput"
+              placeholder="Discord Webhook"
+              onChange={handleChange}
+            />
+            <Button
+              name="discordSave"
+              style={{ marginLeft: "0.5rem" }}
+              onClick={click}
+            >
+              Save
+            </Button>
+          </Row>
+          <Row>
+            <Input
               type="text"
               name="metamaskId"
               id="metamaskinput"
               placeholder="MetaMask Extension ID"
+              defaultValue={mmid}
+              key={mmid}
               onChange={handleChange}
             />
 
-            <button name="mmSave" onClick={click}>
+            <Button
+              name="mmSave"
+              style={{ marginLeft: "0.5rem" }}
+              onClick={click}
+            >
               Save
-            </button>
-          </>
-        ) : (
-          <>
-            <div style={{ display: "flex" }}>
-              <input
-                type="text"
-                name="discordId"
-                id="metamaskinput"
-                placeholder="Discord Webhook"
-                onChange={handleChange}
-              />
-              <button
-                name="discordSave"
-                style={{ marginLeft: "0.5rem" }}
-                onClick={click}
-              >
-                Save
-              </button>
-            </div>
-            <div style={{ display: "flex" }}>
-              <input
-                type="text"
-                name="metamaskId"
-                id="metamaskinput"
-                placeholder="MetaMask Extension ID"
-                defaultValue={mmid}
-                key={mmid}
-                onChange={handleChange}
-              />
-
-              <button
-                name="mmSave"
-                style={{ marginLeft: "0.5rem" }}
-                onClick={click}
-              >
-                Save
-              </button>
-            </div>
-            <button onClick={autoSnipe}>Open AutoSnipe</button>
-          </>
-        )}
-      </header>
-    </div>
+            </Button>
+          </Row>
+          <Button onClick={autoSnipe}>Open AutoSnipe</Button>
+        </>
+      )}
+    </Wrapper>
   );
 };
 

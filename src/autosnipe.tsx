@@ -5,8 +5,13 @@ import { Notyf } from "notyf";
 import "notyf/notyf.min.css"; // for React, Vue and Svelte
 import axios from "axios";
 import { ethers } from "ethers";
+import useSound from "use-sound";
+import successSound from "../public/successSound.mp3";
 import utils from "./utils/utils";
 const Autosnipe = () => {
+  const [play] = useSound(successSound, {
+    volume: 0.5,
+  });
   const channel = new BroadcastChannel("Funimation");
   const [collectionSlug, setCollectionSlug] = React.useState<string>("");
   const [price, setPrice] = React.useState<any>();
@@ -121,6 +126,7 @@ const Autosnipe = () => {
                         tokenId: filtered[i]?.asset?.token_id,
                       };
                       channel.postMessage({ params });
+                      play();
                       notyf.success(
                         `Successfully found listing ${filtered[i]?.asset?.token_id}`
                       );
@@ -137,7 +143,7 @@ const Autosnipe = () => {
           .catch((err: any) => {
             console.log(err);
           });
-      }, 7500);
+      }, 4000);
 
       return () => clearInterval(interval);
     } else {
