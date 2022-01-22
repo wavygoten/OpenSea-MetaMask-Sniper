@@ -15,63 +15,67 @@ main();
 looksRare();
 async function main() {
   setInterval(async () => {
-    if (
-      (document.location.href.includes("https://opensea.io/activity") &&
-        document.location.href.includes("AUCTION_CREATED")) ||
-      (document.location.href.includes("https://opensea.io/collection") &&
-        document.location.href.includes("AUCTION_CREATED"))
-    ) {
-      let content: any = document.querySelectorAll('[role="listitem"]');
-      if (content) {
-        content.forEach(async function (element: any, idx: number) {
+    if (!document.location.href.includes("https://opensea.io/account")) {
+      let list: any = document.querySelectorAll('[role="listitem"]');
+      if (list) {
+        list.forEach(async function (element: any, idx: number) {
           // buy stuff
           if (
-            element?.children[0].getElementsByClassName("purchase-button")
-              .length === 0
+            element?.children[0].getElementsByClassName(
+              "traitsurfer-purchase-button"
+            ).length === 0
           ) {
-            const button: HTMLButtonElement = document.createElement("button");
+            if (
+              element?.children[0]?.children[0]?.children[5]?.querySelector("p")
+                ?.innerHTML === "---"
+            ) {
+              const button: HTMLButtonElement =
+                document.createElement("button");
 
-            button.className = "purchase-button";
-            button.innerHTML = "Cop Now";
+              button.className = "traitsurfer-purchase-button";
+              button.innerHTML = "Cop Now";
 
-            button.onclick = async () => {
-              assetId = element
-                ?.querySelector("a")
-                ?.getAttribute("href")
-                .split("/")[2];
-              tokenId = element
-                ?.querySelector("a")
-                ?.getAttribute("href")
-                .split("/")[3];
+              button.onclick = async () => {
+                assetId = element
+                  ?.querySelector("a")
+                  ?.getAttribute("href")
+                  .split("/")[2];
+                tokenId = element
+                  ?.querySelector("a")
+                  ?.getAttribute("href")
+                  .split("/")[3];
 
-              return event.emit("clickedActivity");
-            };
-            element?.children[0].prepend(button);
-            if (idx < 1) {
-              if (!contentData.includes("error")) {
-                contentData = [];
-              }
-              contractData = element
-                ?.querySelector("a")
-                ?.getAttribute("href")
-                .split("/")[2];
-              if (contentData.length === 0) {
-                chrome.runtime.sendMessage({ getContractData: true });
+                return event.emit("clickedActivity");
+              };
+
+              element?.children[0]?.prepend(button);
+              if (idx < 1) {
+                if (!contentData.includes("error")) {
+                  contentData = [];
+                }
+                contractData = element
+                  ?.querySelector("a")
+                  ?.getAttribute("href")
+                  .split("/")[2];
+                if (contentData.length === 0) {
+                  chrome.runtime.sendMessage({ getContractData: true });
+                }
               }
             }
           }
           // rarity stuff
           if (
-            element?.children[0].getElementsByClassName("rarity-container")
-              .length === 0
+            element?.children[0]?.getElementsByClassName(
+              "traitsurfer-rarity-container"
+            ).length === 0
           ) {
             const rarityContainer: HTMLDivElement =
               document.createElement("div");
             const rarityRank: HTMLDivElement = document.createElement("div");
             const rarityPercent: HTMLDivElement = document.createElement("div");
-            rarityContainer.className = "rarity-container";
-            rarityRank.className = "rarity-rank";
-            rarityPercent.className = "rarity-percentage";
+            rarityContainer.className = "traitsurfer-rarity-container";
+            rarityRank.className = "traitsurfer-rarity-rank";
+            rarityPercent.className = "traitsurfer-rarity-percentage";
 
             for (let item in contentData) {
               let temptoken: string = element
@@ -91,111 +95,109 @@ async function main() {
                 )};`;
                 rarityContainer.appendChild(rarityRank);
                 rarityContainer.appendChild(rarityPercent);
-                element?.children[0]?.children[1]?.children[1]?.children[0]?.children[0]?.children[0]?.children[1].append(
-                  rarityContainer
-                );
-              }
-            }
-          }
-        });
-      }
-    }
-
-    if (document.location.href.includes("https://opensea.io/collection")) {
-      let content: any = document.querySelectorAll('[role="gridcell"]');
-      if (content) {
-        content.forEach(async function (element: any, idx: number) {
-          if (
-            element?.children[0].getElementsByClassName(
-              "purchase-button-collection"
-            ).length === 0
-          ) {
-            const button: HTMLButtonElement = document.createElement("button");
-            button.className = "purchase-button-collection";
-            button.innerHTML = "Cop Now";
-            button.onclick = async () => {
-              assetId = element?.children[0]
-                ?.querySelector("a")
-                ?.href.split("/")[4];
-              tokenId = element?.children[0]
-                ?.querySelector("a")
-                ?.href.split("/")[5];
-              return event.emit("clickedCollection");
-            };
-            element?.children[0].prepend(button);
-            if (idx < 1) {
-              if (!contentData.includes("error")) {
-                contentData = [];
-              }
-              contractData = element?.children[0]
-                ?.querySelector("a")
-                ?.href.split("/")[4];
-              if (contentData.length === 0) {
-                chrome.runtime.sendMessage({ getContractData: true });
-              }
-            }
-          }
-          if (
-            element.children[0].getElementsByClassName("rarity-container")
-              .length === 0
-          ) {
-            const rarityContainer: HTMLDivElement =
-              document.createElement("div");
-            const rarityRank: HTMLDivElement = document.createElement("div");
-            const rarityPercent: HTMLDivElement = document.createElement("div");
-
-            rarityContainer.className = "rarity-container";
-            rarityRank.className = "rarity-rank";
-            rarityPercent.className = "rarity-percentage";
-
-            for (let item in contentData) {
-              let temptoken: string = element.children[0]
-                ?.querySelector("a")
-                ?.href.split("/")[5];
-              if (contentData[item]?.tokenid === temptoken) {
-                let rank = `${contentData[item]?.rank} / ${contentData.length}`;
-                let percent = `${(
-                  (contentData[item]?.rank / contentData.length) *
-                  100
-                ).toFixed(1)} %`;
-                rarityRank.innerHTML = rank;
-                rarityPercent.innerHTML = percent;
-                // add color combo here
-                rarityPercent.style.cssText = `background-color:${hexScaleOpensea(
-                  (contentData[item]?.rank / contentData.length) * 100
-                )};`;
-                rarityContainer.appendChild(rarityRank);
-                rarityContainer.appendChild(rarityPercent);
-                element.children[0]
+                element?.children[0]
                   ?.querySelector("a")
-                  ?.children[1]?.children[0]?.children[0].append(
-                    rarityContainer
-                  );
+                  ?.append(rarityContainer);
               }
             }
           }
         });
       }
     }
-
-    if (document.location.href.includes("https://opensea.io/assets")) {
-      let content: any =
-        document.getElementsByClassName("TradeStation--main")[0];
-      if (content) {
+    let grid: any = document.querySelectorAll('[role="gridcell"]');
+    if (grid) {
+      grid.forEach(async function (element: any, idx: number) {
         if (
-          content.getElementsByClassName("purchase-button-assets").length === 0
+          element?.children[0].getElementsByClassName(
+            "traitsurfer-purchase-button-collection"
+          ).length === 0
         ) {
           const button: HTMLButtonElement = document.createElement("button");
-          button.className = "purchase-button-assets";
+          const divFlex: HTMLDivElement = document.createElement("div");
+          divFlex.className = "traitsurfer-flex";
+          divFlex.style.cssText = "display:flex; align-items:center;";
+          button.className = "traitsurfer-purchase-button-collection";
           button.innerHTML = "Cop Now";
-
+          button.style.cssText = "flex: 1;";
           button.onclick = async () => {
-            assetId = document.location.href.split("/")[4];
-            tokenId = document.location.href.split("/")[5];
-            return event.emit("clickedAssets");
+            assetId = element?.children[0]
+              ?.querySelector("a")
+              ?.href.split("/")[4];
+            tokenId = element?.children[0]
+              ?.querySelector("a")
+              ?.href.split("/")[5];
+            return event.emit("clickedCollection");
           };
-          content.append(button);
+          divFlex.appendChild(button);
+          element?.querySelector("article").prepend(divFlex);
+          if (idx < 1) {
+            if (!contentData.includes("error")) {
+              contentData = [];
+            }
+            contractData = element?.children[0]
+              ?.querySelector("a")
+              ?.href.split("/")[4];
+            if (contentData.length === 0) {
+              chrome.runtime.sendMessage({ getContractData: true });
+            }
+          }
         }
+        if (
+          element.children[0].getElementsByClassName(
+            "traitsurfer-rarity-container"
+          ).length === 0
+        ) {
+          const rarityContainer: HTMLDivElement = document.createElement("div");
+          const rarityRank: HTMLDivElement = document.createElement("div");
+          const rarityPercent: HTMLDivElement = document.createElement("div");
+
+          rarityContainer.className = "traitsurfer-rarity-container";
+          rarityRank.className = "traitsurfer-rarity-rank";
+          rarityPercent.className = "traitsurfer-rarity-percentage";
+          rarityContainer.style.cssText = "margin-top: 0;";
+          for (let item in contentData) {
+            let temptoken: string = element.children[0]
+              ?.querySelector("a")
+              ?.href.split("/")[5];
+            if (contentData[item]?.tokenid === temptoken) {
+              let rank = `${contentData[item]?.rank} / ${contentData.length}`;
+              let percent = `${(
+                (contentData[item]?.rank / contentData.length) *
+                100
+              ).toFixed(1)} %`;
+              rarityRank.innerHTML = rank;
+              rarityPercent.innerHTML = percent;
+              // add color combo here
+              rarityPercent.style.cssText = `background-color:${hexScaleOpensea(
+                (contentData[item]?.rank / contentData.length) * 100
+              )};`;
+              rarityContainer.appendChild(rarityRank);
+              rarityContainer.appendChild(rarityPercent);
+              element.children[0]
+                ?.querySelector(".traitsurfer-flex")
+                ?.append(rarityContainer);
+            }
+          }
+        }
+      });
+    }
+
+    let assets: any = document.getElementsByClassName("TradeStation--main")[0];
+    if (assets) {
+      if (
+        assets.getElementsByClassName("traitsurfer-purchase-button-assets")
+          .length === 0
+      ) {
+        const button: HTMLButtonElement = document.createElement("button");
+        button.className = "traitsurfer-purchase-button-assets";
+        button.innerHTML = "Cop Now";
+
+        button.onclick = async () => {
+          assetId = document.location.href.split("/")[4];
+          tokenId = document.location.href.split("/")[5];
+          return event.emit("clickedAssets");
+        };
+        assets.append(button);
       }
     }
   }, 1000);

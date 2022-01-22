@@ -1,4 +1,4 @@
-.purchase-button {
+.traitsurfer-purchase-button {
   color: white;
   padding: 6px 12px;
   outline: none;
@@ -10,7 +10,7 @@
   z-index: 999;
   font-size: 16px;
 }
-.rarity-container {
+.traitsurfer-rarity-container {
   margin-top: 4px;
   background-color: #111314;
   font-size: 14px;
@@ -21,18 +21,18 @@
   border-radius: 4px;
 }
 
-.rarity-rank {
+.traitsurfer-rarity-rank {
   padding: 4px 8px;
   flex: 1 0 auto;
 }
-.rarity-percentage {
+.traitsurfer-rarity-percentage {
   padding: 4px 8px;
   border-radius: 4px;
   min-width: 70px;
   text-align: center;
 }
 
-.purchase-button-assets {
+.traitsurfer-purchase-button-assets {
   font-size: large;
   color: white;
   padding: 12px 20px;
@@ -43,7 +43,7 @@
   opacity: 0.8;
 }
 
-.purchase-button-collection {
+.traitsurfer-purchase-button-collection {
   font-size: medium;
   color: white;
   padding: 6px 10px;
@@ -54,15 +54,15 @@
   opacity: 0.8;
 }
 
-.purchase-button:hover {
+.traitsurfer-purchase-button:hover {
   opacity: 1;
   transition: 100ms ease-in;
 }
-.purchase-button-assets:hover {
+.traitsurfer-purchase-button-assets:hover {
   opacity: 1;
   transition: 100ms ease-in;
 }
-.purchase-button-collection:hover {
+.traitsurfer-purchase-button-collection:hover {
   opacity: 1;
   transition: 100ms ease-in;
 }
