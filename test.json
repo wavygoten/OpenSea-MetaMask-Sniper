@@ -1,0 +1,34 @@
+{
+  "success": {
+    "username": "knowgoten",
+    "account": {
+      "user": { "username": "knowgoten" },
+      "profile_img_url": "https://lh3.googleusercontent.com/aJNhBwMBEGrclhdSrVTB_mv1t1LIHi7KOBXGEUPzKbUPJgHUTNH96g0QIrsI18VG-MmBhvugEoA1OuZht92NQ7PRQBts4clhFOxpQA=s100",
+      "address": "0x17fad58710d1ad48cfe0bad0dff54202dce505bc",
+      "config": "",
+      "currencies": {}
+    },
+    "user_profile": {
+      "email_verified": true,
+      "marketing_emails": true,
+      "receive_item_sold_emails": true,
+      "receive_owned_asset_update_emails": true,
+      "receive_bid_received_emails": true,
+      "bid_received_emails_price_threshold": "5000000000000000",
+      "receive_bid_item_price_change_emails": true,
+      "receive_outbid_emails": true,
+      "receive_referral_emails": true,
+      "receive_auction_creation_emails": true,
+      "receive_auction_expiration_emails": true,
+      "receive_bid_invalid_emails": true,
+      "receive_bundle_invalid_emails": true,
+      "receive_purchase_emails": true,
+      "receive_cancellation_emails": true,
+      "receive_new_asset_received_emails": true,
+      "receive_newsletter": true,
+      "receive_storefront_whitelisted_emails": true,
+      "has_affirmatively_accepted_opensea_terms": false,
+      "nsfw_preference": "hide"
+    }
+  }
+}

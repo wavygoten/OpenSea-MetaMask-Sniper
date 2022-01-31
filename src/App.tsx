@@ -10,8 +10,9 @@ import {
   Container,
   Header,
   Image,
+  Svg,
 } from "./components";
-import axios from "axios";
+import external from "../public/external.svg";
 var manifest = chrome.runtime.getManifest();
 
 const App = () => {
@@ -55,6 +56,10 @@ const App = () => {
     e.preventDefault();
     chrome.tabs.create({ url: chrome.runtime.getURL("index.html") });
   };
+  const traitSurfer = async (e: any) => {
+    e.preventDefault();
+    chrome.tabs.create({ url: "https://traitsurfer.app" });
+  };
 
   React.useEffect(() => {
     chrome.storage.local.get(["mmid"], (res: any) => {
@@ -79,6 +84,7 @@ const App = () => {
     <Wrapper>
       <Title>
         <div>Trait Surfer</div>
+        <Svg src={external} alt="" onClick={traitSurfer} />
       </Title>
       {!bool ? (
         <Col>
@@ -96,16 +102,19 @@ const App = () => {
       ) : (
         <>
           <Container>
-            <Col style={{ padding: "0" }}>
-              <span className="address">
-                {address
-                  ? `${address.slice(0, 6)}...${address.slice(-4)}`
-                  : "0x0000...0000"}
-              </span>
-              <span className={address ? "connected" : "disconnected"}>
-                {address ? "Connected" : "Disconnected"}
-              </span>
-            </Col>
+            <Row>
+              <Image src={image} />
+              <Col style={{ padding: "0", justifyContent: "center" }}>
+                <span className="address">
+                  {address
+                    ? `${address.slice(0, 6)}...${address.slice(-4)}`
+                    : "0x0000...0000"}
+                </span>
+                <span className={address ? "connected" : "disconnected"}>
+                  {address ? "Connected" : "Disconnected"}
+                </span>
+              </Col>
+            </Row>
           </Container>
           <Container>
             <Col style={{ padding: "0" }}>
@@ -143,7 +152,7 @@ const App = () => {
             </Col>
           </Container>
           <Col>
-            <Row style={{ margin: "0", flexDirection: "row-reverse" }}>
+            <Row style={{ margin: "0" }}>
               <div className="version">Version {manifest.version}</div>
             </Row>
           </Col>

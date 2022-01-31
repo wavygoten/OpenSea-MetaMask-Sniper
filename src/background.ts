@@ -7,12 +7,11 @@ const browser = detect();
 const config = require("../config.json");
 const channel = new BroadcastChannel("Funimation");
 import utils from "./utils/utils";
-import { ethers } from "ethers";
+import { providers } from "ethers";
 import { OpenSeaPort, Network } from "opensea-js";
 import { OrderSide } from "opensea-js/lib/types";
-
 var mainData: any[] = [];
-var customHttpProvider: ethers.providers.Web3Provider;
+var customHttpProvider: providers.Web3Provider;
 var account: string;
 var seaport: any;
 var error: object;
@@ -31,9 +30,11 @@ chrome.runtime.onMessage.addListener(async function (
       .then((res) => res.json())
       .then((result: any) => {
         if (result?.success?.data) {
-          if (JSON.stringify(mainData).indexOf(contractData) === -1) {
+          if (
+            JSON.stringify(mainData).indexOf(contractData.toLowerCase()) === -1
+          ) {
             mainData.push({
-              contractData: contractData,
+              contractData: contractData.toLowerCase(),
               data: result?.success?.data,
             });
           }
@@ -68,8 +69,9 @@ chrome.runtime.onMessage.addListener(async function (
           );
         }
       });
-    const accountAddress = account;
-
+    const accountAddress: string = account;
+    const title: string = order?.asset?.name;
+    const priceTotal: string = (order?.currentPrice?.c[0] / 10000).toFixed(2);
     await seaport
       .fulfillOrder({
         order,
@@ -92,13 +94,8 @@ chrome.runtime.onMessage.addListener(async function (
         chrome.storage.local.get(["webhook"], async (res: any) => {
           if (res?.webhook) {
             await utils.sendWebhook(res?.webhook, {
-              title:
-                order?.orders[0]?.asset?.asset_contract?.name +
-                " " +
-                order?.orders[0]?.asset?.token_id,
-              priceTotal: ethers.utils.formatEther(
-                order?.orders[0]?.current_price
-              ),
+              title: title,
+              priceTotal: priceTotal,
               txn: txhash,
               url: `https://etherscan.io/tx/${txhash}`,
             });
@@ -146,7 +143,7 @@ chrome.runtime.onMessage.addListener(async function (
         } else {
           error = {
             error: false,
-            message: "Please refresh and try again",
+            message: err?.message,
           };
           chrome.tabs.query(
             { active: true, currentWindow: true },
@@ -161,11 +158,11 @@ chrome.runtime.onMessage.addListener(async function (
 
 channel.onmessage = async (msg: any) => {
   // const WEB3_ENDPOINT = "https://cloudflare-eth.com";
-  // const { JsonRpcProvider } = ethers.providers;
+  // const { JsonRpcProvider } = providers;
   // const cloudflareProvider = new JsonRpcProvider(WEB3_ENDPOINT);
   if (msg?.data?.mmid) {
     const provider = createMetaMaskProvider(msg?.data?.mmid);
-    customHttpProvider = new ethers.providers.Web3Provider(provider);
+    customHttpProvider = new providers.Web3Provider(provider);
     seaport = new OpenSeaPort(provider, {
       networkName: Network.Main,
       apiKey: "6a5959ab6ed841278cb3545d4f4acc4a",
@@ -178,22 +175,23 @@ channel.onmessage = async (msg: any) => {
       chrome.storage.local.set({ mmid: msg?.data?.mmid });
       chrome.storage.local.set({ address: account });
     });
-    // chrome.tabs.create({ url: "https://opensea.io" });
 
-    // customHttpProvider
-    // 	.send("eth_sign", ["sign", `${account}`])
-    // 	.then((res: any) => {
-    // 		seaport.api
-    // 			.get(`https://opensea.io/account/${account}`)
-    // 			.then((res: any) => {
-    // 				chrome.storage.local.set({
-    // 					image: res?.data?.data?.profile_img_url,
-    // 				});
-    // 			})
-    // 			.catch((err: any) => {
-    // 				console.error(err);
-    // 			});
-    // 	});
+    chrome.storage.local.get(["image"], (res: any) => {
+      if (!res?.image) {
+        fetch(`https://traitsurfer.app/api/?address=${account}`)
+          .then((res) => res.json())
+          .then((result: any) => {
+            if (result?.success) {
+              chrome.storage.local.set({
+                image: result?.success?.account?.profile_img_url,
+              });
+            }
+          })
+          .catch((err: any) => {
+            console.error(err);
+          });
+      }
+    });
   }
   if (msg?.data?.webhook) {
     await utils.sendWebhook(msg?.data?.webhook, {
@@ -213,33 +211,34 @@ channel.onmessage = async (msg: any) => {
       token_id: msg?.data?.params?.tokenId,
     });
     const accountAddress = account;
-    await seaport
-      .fulfillOrder({
-        order,
-        accountAddress,
-      })
-      .then((res: any) => {
-        var txhash = res;
-        success = {
-          success: true,
-          message: `Order is processing: Txhash - ${txhash}`,
-        };
-        chrome.storage.local.get(["webhook"], async (res: any) => {
-          if (res?.webhook) {
-            await utils.sendWebhook(res?.webhook, {
-              title:
-                order?.orders[0]?.asset?.asset_contract?.name +
-                " " +
-                order?.orders[0]?.asset?.token_id,
-              priceTotal: ethers.utils.formatEther(
-                order?.orders[0]?.current_price
-              ),
-              txn: txhash,
-              url: `https://etherscan.io/tx/${txhash}`,
-            });
-          }
+    const title: string = order?.asset?.name;
+    const priceTotal: number = parseFloat(
+      (order?.currentPrice?.c[0] / 10000).toFixed(2)
+    );
+    if (priceTotal <= msg?.data?.params?.price) {
+      await seaport
+        .fulfillOrder({
+          order,
+          accountAddress,
+        })
+        .then((res: any) => {
+          var txhash = res;
+          success = {
+            success: true,
+            message: `Order is processing: Txhash - ${txhash}`,
+          };
+          chrome.storage.local.get(["webhook"], async (res: any) => {
+            if (res?.webhook) {
+              await utils.sendWebhook(res?.webhook, {
+                title: title,
+                priceTotal: `${priceTotal}`,
+                txn: txhash,
+                url: `https://etherscan.io/tx/${txhash}`,
+              });
+            }
+          });
         });
-      });
+    }
   }
 };
 

@@ -124,6 +124,7 @@ const Autosnipe = () => {
                       const params = {
                         assetId: filtered[i]?.asset?.asset_contract?.address,
                         tokenId: filtered[i]?.asset?.token_id,
+                        price: price,
                       };
                       channel.postMessage({ params });
                       play();

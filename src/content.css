@@ -9,6 +9,7 @@
   position: relative;
   z-index: 999;
   font-size: 16px;
+  white-space: nowrap;
 }
 .traitsurfer-rarity-container {
   margin-top: 4px;
@@ -41,6 +42,7 @@
   background-color: #2081e2;
   border-radius: 8px;
   opacity: 0.8;
+  white-space: nowrap;
 }
 
 .traitsurfer-purchase-button-collection {
@@ -52,6 +54,7 @@
   background-color: #2081e2;
   border-radius: 8px;
   opacity: 0.8;
+  white-space: nowrap;
 }
 
 .traitsurfer-purchase-button:hover {

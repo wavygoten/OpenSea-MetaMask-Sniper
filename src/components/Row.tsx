@@ -7,7 +7,7 @@ export const Row = styled.div`
     margin-right: 0.5rem;
   }
   .version {
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 400;
     color: #9197a7;
   }

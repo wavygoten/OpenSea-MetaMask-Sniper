@@ -9,10 +9,10 @@ const styledComponentsTransformer = createStyledComponentsTransformer();
 
 const config = {
   entry: {
-    popup: path.join(__dirname, "src/popup.tsx"),
+    // popup: path.join(__dirname, "src/popup.tsx"),
     content: path.join(__dirname, "src/content.ts"),
-    background: path.join(__dirname, "src/background.ts"),
-    autosnipe: path.join(__dirname, "src/autosnipe.tsx"),
+    // background: path.join(__dirname, "src/background.ts"),
+    // autosnipe: path.join(__dirname, "src/autosnipe.tsx"),
   },
   output: { path: path.join(__dirname, "dist"), filename: "[name].js" },
   module: {

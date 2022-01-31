@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap");
 
 :root {
-  background-color: #282c34;
+  background-color: #191a1d;
   color: #fff;
   font-family: "Rubik", sans-serif;
 }
@@ -52,19 +52,21 @@ span {
 }
 
 input {
-  background-color: #282c34 !important;
-  padding: 3px;
-  outline: none;
-  border: 1px solid #616161;
-  border-radius: 3px;
-  color: rgb(255, 255, 255) !important;
+  background-color: #1f2024 !important;
+  padding: 5px;
+  outline: 0 none;
+  font-size: 12px;
+  font-weight: 500;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  color: #f4f4f4 !important;
 }
 input::placeholder {
   color: rgb(151, 151, 151);
 }
-input:hover {
-  background-color: #444b58 !important;
-  transition: 100ms ease !important;
+input:active,
+input:focus {
+  border: 2px solid #2081e2;
 }
 
 /* input:not(:disabled) {
@@ -87,19 +89,22 @@ input[disabled] {
 } */
 
 button {
-  background-color: #406aa8;
+  background-color: #2081e2;
   outline: none;
   border: none;
-  color: white;
+  color: #f4f4f4;
+  font-size: 12px;
+  font-weight: 500;
   border-radius: 3px;
-  padding: 5px 15px;
+  padding: 5px 10px;
   margin: 0.5rem;
+  opacity: 0.8;
 }
 
 button:hover {
-  background-color: #4876bb;
   transition: 100ms ease;
   cursor: pointer;
+  opacity: 1;
 }
 
 button:disabled,
