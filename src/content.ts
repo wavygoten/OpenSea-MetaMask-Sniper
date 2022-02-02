@@ -4,16 +4,17 @@
 import { EventEmitter } from "events";
 import { scaleLinear } from "d3-scale";
 import "./content.css";
-const event: EventEmitter = new EventEmitter();
 import utils from "./utils/utils";
+const event: EventEmitter = new EventEmitter();
 let contentData: any[] = [];
 let contractData: string;
 let tokenId: string;
 let assetId: string;
 
-main();
+openSea();
 looksRare();
-async function main() {
+// stockX();
+async function openSea() {
   setInterval(async () => {
     let list: any = document.querySelectorAll('[role="listitem"]');
     let grid: any = document.querySelectorAll('[role="gridcell"]');
@@ -91,6 +92,55 @@ async function looksRare() {
       }
     }, 1000);
   }
+}
+
+async function stockX() {
+  // add toggle to turn on and off from popup
+  if (
+    document.location.href.includes("https://stockx.com") &&
+    !document.location.href.includes("https://stockx.com/buy")
+  ) {
+    window.onload = async () => {
+      if (document?.querySelector('[data-component="NFTHeroView"]')) {
+        document
+          ?.querySelector(".chakra-stack")
+          ?.children[0]?.querySelector("a")
+          ?.click();
+      }
+    };
+  }
+  const func = async () => {
+    if (document.location.href.includes("https://stockx.com/buy")) {
+      if (
+        document?.querySelectorAll('[data-testid="bottom-button-bar-wrapper"]')
+          .length > 0
+      ) {
+        if (
+          document
+            ?.querySelector('[data-testid="bottom-button-bar-wrapper"]')
+            ?.querySelectorAll("button")[1].innerHTML === "Review Order"
+        ) {
+          document
+            ?.querySelector('[data-testid="bottom-button-bar-wrapper"]')
+            ?.querySelectorAll("button")[1]
+            ?.click();
+        } else if (
+          document
+            ?.querySelector('[data-testid="bottom-button-bar-wrapper"]')
+            ?.querySelectorAll("button")[1].innerHTML === "Place Order"
+        ) {
+          document
+            ?.querySelector('[data-testid="bottom-button-bar-wrapper"]')
+            ?.querySelectorAll("button")[1]
+            ?.click();
+          await toast(true, "Placing order...");
+          clearInterval(interval);
+        }
+      }
+      // document?.querySelector('[data-testid="bidask-bottom-right-btn"]');
+    }
+  };
+  const interval = setInterval(func, 1000);
 }
 
 event.on("clickedActivity", async () => {

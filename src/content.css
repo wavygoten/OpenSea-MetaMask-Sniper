@@ -78,7 +78,7 @@
   margin-right: 3rem;
   padding: 1rem 1.5rem;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  z-index: 999;
+  z-index: 1025;
   animation: slideUp ease-in-out 200ms;
   animation-fill-mode: forwards;
   border-radius: 8px;
