@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
 export const Input = styled.input`
   background-color: var(--secondary-dark);

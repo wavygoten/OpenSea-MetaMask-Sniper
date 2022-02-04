@@ -1,13 +1,12 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import "./autosnipe.css";
+import "../../../styles/autosnipe.css";
 import { Notyf } from "notyf";
 import "notyf/notyf.min.css"; // for React, Vue and Svelte
 import axios from "axios";
-import { ethers } from "ethers";
+import { utils } from "ethers";
 import useSound from "use-sound";
-import successSound from "../public/successSound.mp3";
-import utils from "./utils/utils";
+import successSound from "../../../../public/assets/successSound.mp3";
 const Autosnipe = () => {
   const [play] = useSound(successSound, {
     volume: 0.5,
@@ -118,7 +117,7 @@ const Autosnipe = () => {
                   if (filtered[i]?.asset) {
                     if (
                       parseFloat(
-                        ethers.utils.formatEther(filtered[i]?.starting_price)
+                        utils.formatEther(filtered[i]?.starting_price)
                       ) <= price
                     ) {
                       const params = {

@@ -3,8 +3,8 @@
 
 import { EventEmitter } from "events";
 import { scaleLinear } from "d3-scale";
-import "./content.css";
-import utils from "./utils/utils";
+import "../styles/content.css";
+import utils from "../utils/utils";
 const event: EventEmitter = new EventEmitter();
 let contentData: any[] = [];
 let contractData: string;

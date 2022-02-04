@@ -4,21 +4,21 @@
   "manifest_version": 2,
   "version": "1.0.12",
   "icons": {
-    "16": "Sharingan.png",
-    "48": "Sharingan.png",
-    "128": "Sharingan.png"
+    "16": "./assets/Sharingan.png",
+    "48": "./assets/Sharingan.png",
+    "128": "./assets/Sharingan.png"
   },
   "browser_action": {
     "default_icon": {
-      "16": "Sharingan.png",
-      "48": "Sharingan.png"
+      "16": "./assets/Sharingan.png",
+      "48": "./assets/Sharingan.png"
     },
     "default_popup": "popup.html"
   },
-  "web_accessible_resources": ["index.html"],
+  "web_accessible_resources": ["autosnipe.html"],
   "permissions": ["tabs", "storage", "https://traitsurfer.app/api/*"],
   "background": {
-    "scripts": ["background.js"],
+    "scripts": ["./js/background.js"],
     "persistent": true
   },
   "content_scripts": [
@@ -28,7 +28,7 @@
         "https://looksrare.org/*",
         "https://stockx.com/*"
       ],
-      "js": ["content.js"],
+      "js": ["./js/content.js"],
       "all_frames": true,
       "run_at": "document_end"
     }

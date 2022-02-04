@@ -3,18 +3,21 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const WebpackObfuscator = require("webpack-obfuscator");
-const createStyledComponentsTransformer =
-  require("typescript-plugin-styled-components").default;
-const styledComponentsTransformer = createStyledComponentsTransformer();
 
 const config = {
   entry: {
-    // popup: path.join(__dirname, "src/popup.tsx"),
-    content: path.join(__dirname, "src/content.ts"),
-    // background: path.join(__dirname, "src/background.ts"),
-    // autosnipe: path.join(__dirname, "src/autosnipe.tsx"),
+    popup: path.join(__dirname, "src/app/popup.tsx"),
+    // content: path.join(__dirname, "src/content-scripts/content.ts"),
+    // background: path.join(__dirname, "src/background-scripts/background.ts"),
+    // autosnipe: path.join(
+    //   __dirname,
+    //   "src/app/pages/external-pages/autosnipe.tsx"
+    // ),
   },
-  output: { path: path.join(__dirname, "dist"), filename: "[name].js" },
+  output: {
+    path: path.join(__dirname, "dist"),
+    filename: "./js/[name].js",
+  },
   module: {
     rules: [
       {
@@ -31,11 +34,6 @@ const config = {
         test: /\.ts(x)?$/,
         loader: "ts-loader",
         exclude: /node_modules/,
-        options: {
-          getCustomTransformers: () => ({
-            before: [styledComponentsTransformer],
-          }),
-        },
       },
       {
         test: /\.css$/,
@@ -85,12 +83,12 @@ const config = {
       patterns: [{ from: "public", to: "." }],
     }),
     new NodePolyfillPlugin(),
-    new WebpackObfuscator(
-      {
-        rotateStringArray: true,
-      },
-      ["/node_modules/"]
-    ),
+    // new WebpackObfuscator(
+    //   {
+    //     rotateStringArray: true,
+    //   },
+    //   ["/node_modules/"]
+    // ),
   ],
 };
 

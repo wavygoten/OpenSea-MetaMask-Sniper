@@ -8,3 +8,6 @@ export { Container } from "./Container";
 export { Header } from "./Header";
 export { Image } from "./Image";
 export { Svg } from "./Svg";
+export { TabIndicator } from "./TabIndicator";
+export { Navbar } from "./Navbar";
+export { TopBar } from "./TopBar";
