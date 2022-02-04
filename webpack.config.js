@@ -7,12 +7,12 @@ const WebpackObfuscator = require("webpack-obfuscator");
 const config = {
   entry: {
     popup: path.join(__dirname, "src/app/popup.tsx"),
-    // content: path.join(__dirname, "src/content-scripts/content.ts"),
-    // background: path.join(__dirname, "src/background-scripts/background.ts"),
-    // autosnipe: path.join(
-    //   __dirname,
-    //   "src/app/pages/external-pages/autosnipe.tsx"
-    // ),
+    content: path.join(__dirname, "src/content-scripts/content.ts"),
+    background: path.join(__dirname, "src/background-scripts/background.ts"),
+    autosnipe: path.join(
+      __dirname,
+      "src/app/pages/external-pages/autosnipe.tsx"
+    ),
   },
   output: {
     path: path.join(__dirname, "dist"),
@@ -83,12 +83,12 @@ const config = {
       patterns: [{ from: "public", to: "." }],
     }),
     new NodePolyfillPlugin(),
-    // new WebpackObfuscator(
-    //   {
-    //     rotateStringArray: true,
-    //   },
-    //   ["/node_modules/"]
-    // ),
+    new WebpackObfuscator(
+      {
+        rotateStringArray: true,
+      },
+      ["/node_modules/"]
+    ),
   ],
 };
 
