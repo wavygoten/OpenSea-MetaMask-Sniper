@@ -11,8 +11,26 @@ let contractData: string;
 let tokenId: string;
 let assetId: string;
 
-openSea();
-looksRare();
+// running functions based on toggle in popup
+
+chrome.storage.local.get(["opensea"], async (res: any) => {
+  if (res.opensea) {
+    await openSea();
+  }
+});
+chrome.storage.local.get(["looksrare"], async (res: any) => {
+  if (res.looksrare) {
+    await looksRare();
+  }
+});
+chrome.storage.local.get(["stockx"], async (res: any) => {
+  if (res.stockx) {
+    await stockX();
+  }
+});
+
+// openSea();
+// looksRare();
 // stockX();
 async function openSea() {
   setInterval(async () => {

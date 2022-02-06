@@ -17,7 +17,6 @@ import {
 } from "./components";
 import Opensea from "./pages/popup-pages/Opensea";
 import Settings from "./pages/popup-pages/Settings";
-
 const App = () => {
   const channel = new BroadcastChannel("Funimation");
   const [webhook, setWebhook] = React.useState<string>("");
@@ -25,6 +24,10 @@ const App = () => {
   const [mmid, setMmid] = React.useState<string>("");
   const [address, setAddress] = React.useState<string>("");
   const [image, setImage] = React.useState<string>("");
+  const [openseatoggle, openseaToggleIsOn] = React.useState<boolean>(false);
+  const [looksraretoggle, looksrareToggleIsOn] = React.useState<boolean>(false);
+  const [stockxtoggle, stockxToggleIsOn] = React.useState<boolean>(false);
+  const [autofilltoggle, autofillToggleIsOn] = React.useState<boolean>(false);
 
   const handleChange = async (e: any) => {
     e.preventDefault();
@@ -32,11 +35,33 @@ const App = () => {
       case "discordId":
         setWebhook(e?.target?.value);
         break;
+
       default:
         setMmid(e?.target?.value);
         break;
     }
   };
+
+  class handleToggleChange {
+    openseaToggle() {
+      chrome.storage.local.set({ opensea: !openseatoggle });
+      openseaToggleIsOn(!openseatoggle);
+    }
+
+    looksrareToggle() {
+      chrome.storage.local.set({ looksrare: !looksraretoggle });
+      looksrareToggleIsOn(!looksraretoggle);
+    }
+
+    stockxToggle() {
+      chrome.storage.local.set({ stockx: !stockxtoggle });
+      stockxToggleIsOn(!stockxtoggle);
+    }
+
+    autofillToggle() {
+      autofillToggleIsOn(!autofilltoggle);
+    }
+  }
 
   const click = async (e: any) => {
     e.preventDefault();
@@ -83,12 +108,30 @@ const App = () => {
         setImage(res.image);
       }
     });
+    chrome.storage.local.get(["opensea"], (res: any) => {
+      if (res?.opensea) {
+        openseaToggleIsOn(res?.opensea);
+      }
+    });
+    chrome.storage.local.get(["looksrare"], (res: any) => {
+      if (res?.looksrare) {
+        looksrareToggleIsOn(res?.looksrare);
+      }
+    });
+    chrome.storage.local.get(["stockx"], (res: any) => {
+      if (res?.stockx) {
+        stockxToggleIsOn(res?.stockx);
+      }
+    });
 
     return () => {
       setMmid("");
       setBool(false);
       setAddress("");
       setImage("");
+      openseaToggleIsOn(false);
+      looksrareToggleIsOn(false);
+      stockxToggleIsOn(false);
     };
   }, []);
 
@@ -132,7 +175,18 @@ const App = () => {
                   />
                 }
               />
-              <Route path="/settings" element={<Settings />} />
+              <Route
+                path="/settings"
+                element={
+                  <Settings
+                    handleToggles={new handleToggleChange()}
+                    openseaToggle={openseatoggle}
+                    looksrareToggle={looksraretoggle}
+                    stockxToggle={stockxtoggle}
+                    autofillToggle={autofilltoggle}
+                  />
+                }
+              />
             </Routes>
             <Navbar />
           </>

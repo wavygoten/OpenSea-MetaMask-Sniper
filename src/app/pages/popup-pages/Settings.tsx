@@ -15,7 +15,13 @@ import {
   BasicSwitch,
 } from "../../components";
 
-type Props = {};
+type Props = {
+  handleToggles?: any;
+  openseaToggle?: boolean;
+  looksrareToggle?: boolean;
+  stockxToggle?: boolean;
+  autofillToggle?: boolean;
+};
 
 const Settings = (props: Props) => {
   return (
@@ -48,7 +54,10 @@ const Settings = (props: Props) => {
         >
           <div>Opensea</div>
 
-          <BasicSwitch defaultChecked />
+          <BasicSwitch
+            onChange={props.handleToggles.openseaToggle}
+            checked={props.openseaToggle}
+          />
         </Header>
         <Header
           css={`
@@ -61,7 +70,10 @@ const Settings = (props: Props) => {
         >
           <div>LooksRare</div>
 
-          <BasicSwitch defaultChecked />
+          <BasicSwitch
+            onChange={props.handleToggles.looksrareToggle}
+            checked={props.looksrareToggle}
+          />
         </Header>
         <Header
           css={`
@@ -74,7 +86,10 @@ const Settings = (props: Props) => {
         >
           <div>Stockx</div>
 
-          <BasicSwitch defaultChecked />
+          <BasicSwitch
+            onChange={props.handleToggles.stockxToggle}
+            checked={props.stockxToggle}
+          />
         </Header>
         <Header
           css={`
@@ -87,7 +102,10 @@ const Settings = (props: Props) => {
         >
           <div>Autofill</div>
 
-          <BasicSwitch defaultChecked />
+          <BasicSwitch
+            onChange={props.handleToggles.autofillToggle}
+            checked={props.autofillToggle}
+          />
         </Header>
       </Col>
       <Container
