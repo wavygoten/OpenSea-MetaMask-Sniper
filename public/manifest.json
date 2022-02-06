@@ -1,6 +1,6 @@
 {
   "name": "TraitSurfer",
-  "description": "Snipe items on Opensea, display rarity on Opensea and Looksrare, and more.",
+  "description": "Snipe NFTs, display rarity on OpenSea and LooksRare, and more.",
   "manifest_version": 2,
   "version": "1.0.12",
   "icons": {

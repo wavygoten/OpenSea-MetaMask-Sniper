@@ -11,3 +11,4 @@ export { Svg } from "./Svg";
 export { TabIndicator } from "./TabIndicator";
 export { Navbar } from "./Navbar";
 export { TopBar } from "./TopBar";
+export { BasicSwitch } from "./Toggle";

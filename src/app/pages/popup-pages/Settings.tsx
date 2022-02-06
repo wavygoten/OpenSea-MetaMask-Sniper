@@ -12,7 +12,9 @@ import {
   Svg,
   Navbar,
   TopBar,
+  BasicSwitch,
 } from "../../components";
+
 type Props = {};
 
 const Settings = (props: Props) => {
@@ -22,7 +24,11 @@ const Settings = (props: Props) => {
         width: 239px;
       `}
     >
-      <Col>
+      <Col
+        css={`
+          padding: 1rem 1rem 1.5px 1rem;
+        `}
+      >
         <Header
           css={`
             margin-bottom: 1rem;
@@ -36,49 +42,57 @@ const Settings = (props: Props) => {
             border-bottom: none;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             width: 100%;
           `}
         >
           <div>Opensea</div>
-          <Button>Hi</Button>
+
+          <BasicSwitch defaultChecked />
         </Header>
         <Header
           css={`
             border-bottom: none;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             width: 100%;
           `}
         >
           <div>LooksRare</div>
-          <Button>Hi</Button>
+
+          <BasicSwitch defaultChecked />
         </Header>
         <Header
           css={`
             border-bottom: none;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             width: 100%;
           `}
         >
           <div>Stockx</div>
-          <Button>Hi</Button>
+
+          <BasicSwitch defaultChecked />
         </Header>
         <Header
           css={`
             border-bottom: none;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             width: 100%;
           `}
         >
           <div>Autofill</div>
-          <Button>Hi</Button>
+
+          <BasicSwitch defaultChecked />
         </Header>
       </Col>
       <Container
         css={`
-          padding: 0 1rem 1.5px 1rem;
+          padding: 0 1rem 1rem 1rem;
         `}
       >
         <Row

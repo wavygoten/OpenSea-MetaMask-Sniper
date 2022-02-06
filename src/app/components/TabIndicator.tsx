@@ -5,7 +5,7 @@ export const TabIndicator = styled.div`
   width: calc(100% / 3);
   height: 2px;
   /* border-radius:4px; */
-  background: #00acee;
+  background: var(--button-theme);
   left: 0px;
   transition: 300ms;
 `;

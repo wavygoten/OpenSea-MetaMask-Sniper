@@ -53,10 +53,15 @@ export const Navbar = () => {
             transition: 300ms;
             opacity: 1;
           }
+          div.active {
+            background-color: var(--main-dark);
+            opacity: 1;
+          }
         `}
       >
         {" "}
         <div
+          className={active === 0 ? "active" : ""}
           onClick={() => {
             setActive(0);
             navigate("/");
@@ -65,6 +70,7 @@ export const Navbar = () => {
           <Svg src={openseablue} alt="" />
         </div>
         <div
+          className={active === 1 ? "active" : ""}
           onClick={() => {
             setActive(1);
             navigate("/wallet");
@@ -73,6 +79,7 @@ export const Navbar = () => {
           <Svg src={wallet} alt="" />
         </div>
         <div
+          className={active === 2 ? "active" : ""}
           onClick={() => {
             setActive(2);
             navigate("/settings");
