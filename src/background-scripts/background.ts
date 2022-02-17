@@ -24,20 +24,19 @@ chrome.runtime.onMessage.addListener(async function (
   sender: any
 ) {
   if (request?.queryContractData) {
-    let data = request?.queryContractData;
-    // console.log(data);
-    for (let i = 0; i < mainData.length; i++) {
-      if (mainData[i].contractData === data.contract) {
-        for (let j = 0; j < mainData[i].data.length; j++) {
-          if (mainData[i].data[j].tokenid === data.token) {
-            chrome.tabs.sendMessage(sender.tab.id, {
-              queryData: mainData[i].data[j],
-              length: mainData[i].length,
-            });
-          }
-        }
-      }
-    }
+    // let data = request?.queryContractData;
+    // // console.log(data);
+    // for (let i = 0; i < mainData.length; i++) {
+    //   if (mainData[i].contractData === data.contract) {
+    //     for (let j = 0; j < mainData[i].data.length; j++) {
+    //       if (mainData[i].data[j].tokenid === data.token) {
+    //         chrome.tabs.sendMessage(sender.tab.id, {
+    //           queryData: mainData[i].data[j],
+    //         });
+    //       }
+    //     }
+    //   }
+    // }
   }
   if (request?.getContractData) {
     chrome.tabs.sendMessage(sender.tab.id, { mainData: mainData });

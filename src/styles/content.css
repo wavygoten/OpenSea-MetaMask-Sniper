@@ -55,6 +55,7 @@
   border-radius: 8px;
   opacity: 0.8;
   white-space: nowrap;
+  width: 100%;
 }
 
 .traitsurfer-purchase-button:hover {
