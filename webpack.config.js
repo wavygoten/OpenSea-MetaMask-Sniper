@@ -6,13 +6,13 @@ const WebpackObfuscator = require("webpack-obfuscator");
 
 const config = {
   entry: {
-    popup: path.join(__dirname, "src/app/popup.tsx"),
+    // popup: path.join(__dirname, "src/app/popup.tsx"),
     content: path.join(__dirname, "src/content-scripts/content.ts"),
     background: path.join(__dirname, "src/background-scripts/background.ts"),
-    autosnipe: path.join(
-      __dirname,
-      "src/app/pages/external-pages/autosnipe.tsx"
-    ),
+    // autosnipe: path.join(
+    //   __dirname,
+    //   "src/app/pages/external-pages/autosnipe.tsx"
+    // ),
   },
   output: {
     path: path.join(__dirname, "dist"),

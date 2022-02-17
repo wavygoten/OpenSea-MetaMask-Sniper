@@ -8,8 +8,11 @@ import utils from "../utils/utils";
 const event: EventEmitter = new EventEmitter();
 let contentData: any[] = [];
 let contractData: string;
+let mainData: any[] = [];
+let queryContractData: any = {};
 let tokenId: string;
 let assetId: string;
+let arrSize: number = 0;
 
 // running functions based on toggle in popup
 
@@ -51,9 +54,9 @@ async function openSea() {
 
 async function looksRare() {
   if (document.location.href.includes("https://looksrare.org/collections")) {
-    contentData = [];
+    mainData = [];
     var dom_observer = new MutationObserver(async function (mutation) {
-      contentData = [];
+      mainData = [];
     });
     var container = document.documentElement || document.body;
     var config = { attributes: true, childList: true, characterData: true };
@@ -100,11 +103,11 @@ async function looksRare() {
           });
         }
       } else {
-        if (!contentData.includes("error")) {
-          contentData = [];
+        if (!mainData.includes("error")) {
+          mainData = [];
         }
         contractData = document.location.href?.split("/")[4]?.split("#")[0];
-        if (contentData.length === 0) {
+        if (mainData.length === 0) {
           chrome.runtime.sendMessage({ getContractData: true });
         }
       }
@@ -214,17 +217,19 @@ chrome.runtime.onMessage.addListener(async (message, sender) => {
           if (
             message?.mainData[i]?.contractData === contractData?.toLowerCase()
           ) {
-            contentData = message?.mainData[i]?.data;
+            arrSize = message?.mainData[i]?.data.length;
           }
         }
       } else {
         chrome.runtime.sendMessage({ contractData: contractData });
       }
-      console.log(contentData);
     }
   }
   if (message?.scrapeError) {
-    contentData = ["error"];
+    mainData = ["error"];
+  }
+  if (message?.queryData) {
+    mainData.push(message?.queryData);
   }
 });
 
@@ -261,14 +266,14 @@ function listItemAppend(selectors: any) {
 
           element?.children[0]?.prepend(button);
           if (idx < 1) {
-            if (!contentData.includes("error")) {
-              contentData = [];
+            if (!mainData.includes("error")) {
+              mainData = [];
             }
             contractData = element
               ?.querySelector("a")
               ?.getAttribute("href")
               ?.split("/")[2];
-            if (contentData.length === 0) {
+            if (mainData.length === 0) {
               chrome.runtime.sendMessage({ getContractData: true });
             }
           }
@@ -286,28 +291,62 @@ function listItemAppend(selectors: any) {
         rarityContainer.className = "traitsurfer-rarity-container";
         rarityRank.className = "traitsurfer-rarity-rank";
         rarityPercent.className = "traitsurfer-rarity-percentage";
-
-        for (let item in contentData) {
-          let temptoken: string = element
+        if (arrSize > 0) {
+          let contract = element
+            ?.querySelector("a")
+            ?.getAttribute("href")
+            ?.split("/")[2];
+          let token = element
             ?.querySelector("a")
             ?.getAttribute("href")
             ?.split("/")[3];
-          if (contentData[item]?.tokenid === temptoken) {
-            let rank = `${contentData[item]?.rank} / ${contentData.length}`;
-            let percent = `${(
-              (contentData[item]?.rank / contentData.length) *
-              100
-            ).toFixed(1)} %`;
-            rarityRank.innerHTML = rank;
-            rarityPercent.innerHTML = percent;
-            rarityPercent.style.cssText = `background-color:${hexScaleOpensea(
-              (contentData[item]?.rank / contentData.length) * 100
-            )};`;
-            rarityContainer.appendChild(rarityRank);
-            rarityContainer.appendChild(rarityPercent);
-            element?.children[0]?.querySelector("a")?.append(rarityContainer);
+          queryContractData = {
+            contract,
+            token,
+          };
+          chrome.runtime.sendMessage({ queryContractData });
+
+          for (let item in mainData) {
+            if (mainData[item]?.tokenid === token) {
+              let rank = `${mainData[item]?.rank} / ${arrSize}`;
+              let percent = `${((mainData[item]?.rank / arrSize) * 100).toFixed(
+                1
+              )} %`;
+              rarityRank.innerHTML = rank;
+              rarityPercent.innerHTML = percent;
+
+              rarityPercent.style.cssText = `background-color:${hexScaleOpensea(
+                (mainData[item]?.rank / arrSize) * 100
+              )};`;
+
+              rarityContainer.appendChild(rarityRank);
+              rarityContainer.appendChild(rarityPercent);
+              element?.children[0]?.querySelector("a")?.append(rarityContainer);
+            }
           }
         }
+
+        // for (let item in contentData) {
+        //   let temptoken: string = element
+        //     ?.querySelector("a")
+        //     ?.getAttribute("href")
+        //     ?.split("/")[3];
+        //   if (contentData[item]?.tokenid === temptoken) {
+        //     let rank = `${contentData[item]?.rank} / ${contentData.length}`;
+        //     let percent = `${(
+        //       (contentData[item]?.rank / contentData.length) *
+        //       100
+        //     ).toFixed(1)} %`;
+        //     rarityRank.innerHTML = rank;
+        //     rarityPercent.innerHTML = percent;
+        //     rarityPercent.style.cssText = `background-color:${hexScaleOpensea(
+        //       (contentData[item]?.rank / contentData.length) * 100
+        //     )};`;
+        //     rarityContainer.appendChild(rarityRank);
+        //     rarityContainer.appendChild(rarityPercent);
+        //     element?.children[0]?.querySelector("a")?.append(rarityContainer);
+        //   }
+        // }
       }
     });
   }
@@ -340,13 +379,13 @@ function gridCellCardAppend(selectors: any) {
         divFlex.appendChild(button);
         element?.querySelector("article").prepend(divFlex);
         if (idx < 1) {
-          if (!contentData.includes("error")) {
-            contentData = [];
+          if (!mainData.includes("error")) {
+            mainData = [];
           }
           contractData = element?.children[0]
             ?.querySelector("a")
             ?.href?.split("/")[4];
-          if (contentData.length === 0) {
+          if (mainData.length === 0) {
             chrome.runtime.sendMessage({ getContractData: true });
           }
         }
@@ -364,29 +403,64 @@ function gridCellCardAppend(selectors: any) {
         rarityRank.className = "traitsurfer-rarity-rank";
         rarityPercent.className = "traitsurfer-rarity-percentage";
         rarityContainer.style.cssText = "margin-top: 0;";
-        for (let item in contentData) {
-          let temptoken: string = element.children[0]
+
+        if (arrSize > 0) {
+          let contract = element?.children[0]
+            ?.querySelector("a")
+            ?.href?.split("/")[4];
+          let token = element?.children[0]
             ?.querySelector("a")
             ?.href?.split("/")[5];
-          if (contentData[item]?.tokenid === temptoken) {
-            let rank = `${contentData[item]?.rank} / ${contentData.length}`;
-            let percent = `${(
-              (contentData[item]?.rank / contentData.length) *
-              100
-            ).toFixed(1)} %`;
-            rarityRank.innerHTML = rank;
-            rarityPercent.innerHTML = percent;
-            // add color combo here
-            rarityPercent.style.cssText = `background-color:${hexScaleOpensea(
-              (contentData[item]?.rank / contentData.length) * 100
-            )};`;
-            rarityContainer.appendChild(rarityRank);
-            rarityContainer.appendChild(rarityPercent);
-            element.children[0]
-              ?.querySelector(".traitsurfer-flex")
-              ?.append(rarityContainer);
+          queryContractData = {
+            contract,
+            token,
+          };
+          chrome.runtime.sendMessage({ queryContractData });
+
+          for (let item in mainData) {
+            if (mainData[item]?.tokenid === token) {
+              let rank = `${mainData[item]?.rank} / ${arrSize}`;
+              let percent = `${((mainData[item]?.rank / arrSize) * 100).toFixed(
+                1
+              )} %`;
+              rarityRank.innerHTML = rank;
+              rarityPercent.innerHTML = percent;
+
+              rarityPercent.style.cssText = `background-color:${hexScaleOpensea(
+                (mainData[item]?.rank / arrSize) * 100
+              )};`;
+
+              rarityContainer.appendChild(rarityRank);
+              rarityContainer.appendChild(rarityPercent);
+              element?.children[0]
+                ?.querySelector(".traitsurfer-flex")
+                ?.append(rarityContainer);
+            }
           }
         }
+        // for (let item in contentData) {
+        //   let temptoken: string = element.children[0]
+        //     ?.querySelector("a")
+        //     ?.href?.split("/")[5];
+        //   if (contentData[item]?.tokenid === temptoken) {
+        //     let rank = `${contentData[item]?.rank} / ${contentData.length}`;
+        //     let percent = `${(
+        //       (contentData[item]?.rank / contentData.length) *
+        //       100
+        //     ).toFixed(1)} %`;
+        //     rarityRank.innerHTML = rank;
+        //     rarityPercent.innerHTML = percent;
+        //     // add color combo here
+        //     rarityPercent.style.cssText = `background-color:${hexScaleOpensea(
+        //       (contentData[item]?.rank / contentData.length) * 100
+        //     )};`;
+        //     rarityContainer.appendChild(rarityRank);
+        //     rarityContainer.appendChild(rarityPercent);
+        //     element.children[0]
+        //       ?.querySelector(".traitsurfer-flex")
+        //       ?.append(rarityContainer);
+        //   }
+        // }
       }
     });
   }

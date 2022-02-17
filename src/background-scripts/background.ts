@@ -11,6 +11,7 @@ import { providers } from "ethers";
 import { OpenSeaPort, Network } from "opensea-js";
 import { OrderSide } from "opensea-js/lib/types";
 var mainData: any[] = [];
+var meinData: any[] = [];
 var customHttpProvider: providers.Web3Provider;
 var account: string;
 var signature: string;
@@ -22,6 +23,22 @@ chrome.runtime.onMessage.addListener(async function (
   request: any,
   sender: any
 ) {
+  if (request?.queryContractData) {
+    let data = request?.queryContractData;
+    // console.log(data);
+    for (let i = 0; i < mainData.length; i++) {
+      if (mainData[i].contractData === data.contract) {
+        for (let j = 0; j < mainData[i].data.length; j++) {
+          if (mainData[i].data[j].tokenid === data.token) {
+            chrome.tabs.sendMessage(sender.tab.id, {
+              queryData: mainData[i].data[j],
+              length: mainData[i].length,
+            });
+          }
+        }
+      }
+    }
+  }
   if (request?.getContractData) {
     chrome.tabs.sendMessage(sender.tab.id, { mainData: mainData });
   }
