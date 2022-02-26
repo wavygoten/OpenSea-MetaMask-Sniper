@@ -464,21 +464,68 @@ function gridCellCardAppend(selectors: any) {
 }
 
 function TradeStationAppend(selectors: any) {
-  if (selectors) {
-    if (
-      selectors.getElementsByClassName("traitsurfer-purchase-button-assets")
-        .length === 0
-    ) {
-      const button: HTMLButtonElement = document.createElement("button");
-      button.className = "traitsurfer-purchase-button-assets";
-      button.innerHTML = "Cop Now";
+  if (document.location.href.includes("https://opensea.io/assets")) {
+    if (selectors) {
+      if (
+        selectors.getElementsByClassName("traitsurfer-purchase-button-assets")
+          .length === 0
+      ) {
+        const button: HTMLButtonElement = document.createElement("button");
+        button.className = "traitsurfer-purchase-button-assets";
+        button.innerHTML = "Cop Now";
 
-      button.onclick = async () => {
-        assetId = document.location.href?.split("/")[4];
-        tokenId = document.location.href?.split("/")[5];
-        return event.emit("clickedAssets");
-      };
-      selectors.append(button);
+        button.onclick = async () => {
+          assetId = document.location.href?.split("/")[4];
+          tokenId = document.location.href?.split("/")[5];
+          return event.emit("clickedAssets");
+        };
+
+        selectors.append(button);
+      }
+    }
+
+    if (
+      document.getElementsByClassName("traitsurfer-rarity-container").length ===
+      0
+    ) {
+      const rarityContainer: HTMLDivElement = document.createElement("div");
+      const rarityRank: HTMLDivElement = document.createElement("div");
+      const rarityPercent: HTMLDivElement = document.createElement("div");
+      rarityContainer.className = "traitsurfer-rarity-container";
+      rarityRank.className = "traitsurfer-rarity-rank";
+      rarityPercent.className = "traitsurfer-rarity-percentage";
+      rarityContainer.style.cssText = "flex: 1 1 auto;";
+      if (!contentData.includes("error")) {
+        contentData = [];
+      }
+      contractData = document.location.href?.split("/")[4];
+      if (contentData.length === 0) {
+        chrome.runtime.sendMessage({ getContractData: true });
+      }
+      fetch(
+        `https://traitsurfer.app/api/${document.location.href?.split("/")[4]}/${
+          document.location.href?.split("/")[5]
+        }`
+      )
+        .then((res) => res.json())
+        .then((result: any) => {
+          if (result.success) {
+            rarityRank.innerHTML = `${result?.success?.rank} / ${contentData.length}`;
+            rarityPercent.innerHTML = `${(
+              (result?.success?.rank / contentData.length) *
+              100
+            ).toFixed(1)} %`;
+            rarityPercent.style.cssText = `background-color:${hexScaleOpensea(
+              (result?.success?.rank / contentData.length) * 100
+            )};`;
+          }
+        })
+        .catch((err: any) => {
+          console?.error(err?.message);
+        });
+      rarityContainer?.appendChild(rarityRank);
+      rarityContainer?.appendChild(rarityPercent);
+      document?.querySelector(".item--counts")?.append(rarityContainer);
     }
   }
 }
