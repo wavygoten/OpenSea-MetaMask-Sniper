@@ -234,6 +234,25 @@ function listItemAppend(selectors: any) {
   if (selectors) {
     selectors.forEach(async function (element: any, idx: number) {
       // buy stuff
+      const button: HTMLButtonElement = document.createElement("button");
+      button.onclick = async () => {
+        assetId = document.location.href.includes("opensea.io/activity")
+          ? element
+              ?.querySelector(".fresnel-greaterThanOrEqual-sm")
+              ?.querySelectorAll("span")[1]
+              ?.children[0]?.getAttribute("href")
+              ?.split("/")[2]
+          : element?.querySelector("a")?.getAttribute("href")?.split("/")[2];
+        tokenId = document.location.href.includes("opensea.io/activity")
+          ? element
+              ?.querySelector(".fresnel-greaterThanOrEqual-sm")
+              ?.querySelectorAll("span")[1]
+              ?.children[0]?.getAttribute("href")
+              ?.split("/")[3]
+          : element?.querySelector("a")?.getAttribute("href")?.split("/")[3];
+
+        return event.emit("clickedActivity");
+      };
       if (
         element?.children[0].getElementsByClassName(
           "traitsurfer-purchase-button"
@@ -243,36 +262,56 @@ function listItemAppend(selectors: any) {
           element?.children[0]?.children[0]?.children[5]?.querySelector("p")
             ?.innerHTML === "---"
         ) {
-          const button: HTMLButtonElement = document.createElement("button");
-
+          const title: HTMLDivElement = document.createElement("div");
+          title.innerHTML = "Quick Buy";
           button.className = "traitsurfer-purchase-button";
-          button.innerHTML = "Cop Now";
+          button.style.cssText =
+            "display:flex; justify-content:center; align-items:center";
 
-          button.onclick = async () => {
-            assetId = element
-              ?.querySelector("a")
-              ?.getAttribute("href")
-              ?.split("/")[2];
-            tokenId = element
-              ?.querySelector("a")
-              ?.getAttribute("href")
-              ?.split("/")[3];
+          if (document.body.offsetWidth >= 1500) {
+            button.appendChild(title);
+          }
+          cartSvg(button);
 
-            return event.emit("clickedActivity");
-          };
+          // clear inner html
+          element?.children[0]?.children[0]?.children[5]
+            ?.querySelector("p")
+            .removeChild(
+              element?.children[0]?.children[0]?.children[5]?.querySelector("p")
+                .firstChild
+            );
+          element?.children[0]?.children[0]?.children[5]
+            ?.querySelector("p")
+            ?.appendChild(button);
 
-          element?.children[0]?.prepend(button);
           if (idx < 1) {
             if (!contentData.includes("error")) {
               contentData = [];
             }
-            contractData = element
-              ?.querySelector("a")
-              ?.getAttribute("href")
-              ?.split("/")[2];
+            contractData = document.location.href.includes(
+              "opensea.io/activity"
+            )
+              ? element
+                  ?.querySelector(".fresnel-greaterThanOrEqual-sm")
+                  ?.querySelectorAll("span")[1]
+                  ?.children[0]?.getAttribute("href")
+                  ?.split("/")[2]
+              : element
+                  ?.querySelector("a")
+                  ?.getAttribute("href")
+                  ?.split("/")[2];
             if (contentData.length === 0) {
               chrome.runtime.sendMessage({ getContractData: true });
             }
+          }
+        } else if (document.body.offsetWidth < 1024) {
+          button.className = "traitsurfer-purchase-button";
+          button.style.cssText =
+            "display:flex; justify-content:center; align-items:center; margin: 2rem 0.5rem 2rem;";
+
+          cartSvg(button);
+          if (!document.location.href.includes("opensea.io/activity")) {
+            element?.children[0]?.children[0]?.children[0].prepend(button);
           }
         }
       }
@@ -324,10 +363,15 @@ function listItemAppend(selectors: any) {
         // }
 
         for (let item in contentData) {
-          let temptoken: string = element
-            ?.querySelector("a")
-            ?.getAttribute("href")
-            ?.split("/")[3];
+          let temptoken: string = document.location.href.includes(
+            "opensea.io/activity"
+          )
+            ? element
+                ?.querySelector(".fresnel-greaterThanOrEqual-sm")
+                ?.querySelectorAll("span")[1]
+                ?.children[0]?.getAttribute("href")
+                ?.split("/")[3]
+            : element?.querySelector("a")?.getAttribute("href")?.split("/")[3];
           if (contentData[item]?.tokenid === temptoken) {
             let rank = `${contentData[item]?.rank} / ${contentData.length}`;
             let percent = `${(
@@ -341,7 +385,14 @@ function listItemAppend(selectors: any) {
             )};`;
             rarityContainer.appendChild(rarityRank);
             rarityContainer.appendChild(rarityPercent);
-            element?.children[0]?.querySelector("a")?.append(rarityContainer);
+            document.location.href.includes("opensea.io/activity")
+              ? element
+                  ?.querySelector(".fresnel-greaterThanOrEqual-sm")
+                  ?.querySelectorAll("span")[1]
+                  ?.children[0]?.append(rarityContainer)
+              : element?.children[0]
+                  ?.querySelector("a")
+                  ?.append(rarityContainer);
           }
         }
       }
@@ -359,11 +410,17 @@ function gridCellCardAppend(selectors: any) {
       ) {
         const button: HTMLButtonElement = document.createElement("button");
         const divFlex: HTMLDivElement = document.createElement("div");
+        const title: HTMLDivElement = document.createElement("div");
+        title.innerHTML = "Quick Buy";
         divFlex.className = "traitsurfer-flex";
         divFlex.style.cssText =
           "display:flex; flex-direction:column; align-items:center;";
         button.className = "traitsurfer-purchase-button-collection";
-        button.innerHTML = "Cop Now";
+        button.style.cssText =
+          "display:flex; justify-content:center; align-items:center";
+        button.appendChild(title);
+
+        cartSvg(button);
         button.onclick = async () => {
           assetId = element?.children[0]
             ?.querySelector("a")
@@ -471,8 +528,15 @@ function TradeStationAppend(selectors: any) {
           .length === 0
       ) {
         const button: HTMLButtonElement = document.createElement("button");
+        const title: HTMLDivElement = document.createElement("div");
+        title.innerHTML = "Quick Buy";
         button.className = "traitsurfer-purchase-button-assets";
-        button.innerHTML = "Cop Now";
+        button.style.cssText =
+          "display:flex; justify-content:center; align-items:center; width: 100%; margin: 0.5rem 0;";
+
+        button.appendChild(title);
+
+        cartSvg(button);
 
         button.onclick = async () => {
           assetId = document.location.href?.split("/")[4];
@@ -532,7 +596,11 @@ function TradeStationAppend(selectors: any) {
 
 function hexScaleOpensea(percent: number) {
   let hex: any;
-  if (percent <= 5) {
+  if (percent <= 1) {
+    hex = scaleLinear<string, number>()
+      .range(["#ff003c", "#ff003c"])
+      .domain([0, 1]);
+  } else if (percent <= 5 && percent > 1) {
     hex = scaleLinear<string, number>()
       .range(["#931cc9", "#a920e8"])
       .domain([0, 5]);
@@ -547,6 +615,52 @@ function hexScaleOpensea(percent: number) {
   }
   if (percent) return hex(percent);
 }
+
+async function cartSvg(container: any) {
+  const svg: SVGElement = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "svg"
+  );
+  const path: SVGElement = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "path"
+  );
+  const circle1: SVGElement = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "circle"
+  );
+  const circle2: SVGElement = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "circle"
+  );
+
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("stroke", "#fff");
+  svg.setAttribute("fill", "transparent");
+  svg.setAttribute("class", "h-12 w-12");
+  svg.setAttribute("width", "24px");
+  svg.setAttribute("height", "24px");
+  path.setAttribute("stroke-linejoin", "round");
+  path.setAttribute("stroke-linecap", "round");
+  path.setAttribute("stroke-width", "1.5");
+  path.setAttribute(
+    "d",
+    "M7.75 7.75H19.25L17.6128 14.7081C17.4002 15.6115 16.5941 16.25 15.666 16.25H11.5395C10.632 16.25 9.83827 15.639 9.60606 14.7618L7.75 7.75ZM7.75 7.75L7 4.75H4.75"
+  );
+  circle1.setAttribute("cx", "10");
+  circle1.setAttribute("cy", "19");
+  circle1.setAttribute("r", "1");
+  circle1.setAttribute("fill", "#fff");
+  circle2.setAttribute("cx", "15");
+  circle2.setAttribute("cy", "19");
+  circle2.setAttribute("r", "1");
+  circle2.setAttribute("fill", "#fff");
+  svg.appendChild(path);
+  svg.appendChild(circle1);
+  svg.appendChild(circle2);
+  container.appendChild(svg);
+}
+
 async function toast(status?: boolean, message?: string) {
   if (status) {
     const toastcontainer: HTMLDivElement = document.createElement("div");

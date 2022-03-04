@@ -2,7 +2,7 @@
   "name": "TraitSurfer",
   "description": "Snipe NFTs, display rarity on OpenSea and LooksRare, and more.",
   "manifest_version": 2,
-  "version": "1.0.12",
+  "version": "1.0.13",
   "icons": {
     "16": "./assets/Sharingan.png",
     "48": "./assets/Sharingan.png",
