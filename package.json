@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "start": "webpack --watch"
+    "start": "webpack --watch",
+    "git": "git add . && git commit -m 'fix' && git push -u origin ethersjs"
   },
   "keywords": [],
   "license": "ISC",
