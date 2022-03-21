@@ -93,7 +93,7 @@ async function looksRare() {
 									).toFixed(1)} %`;
 									rarityContainer.appendChild(rarityRank);
 									rarityContainer.appendChild(rarityPercent);
-									content?.querySelectorAll("a")[0]?.prepend(rarityContainer);
+									content?.children[0]?.prepend(rarityContainer);
 								}
 							}
 						}
