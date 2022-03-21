@@ -60,41 +60,44 @@ async function looksRare() {
 		dom_observer.observe(container, config);
 		setInterval(() => {
 			if (contentData.length > 0) {
-				let content: any = document.querySelectorAll(".lazyload-wrapper");
-				if (content) {
-					if (
-						content?.getElementsByClassName("traitsurfer-rarity-container")
-							.length === 0
-					) {
-						const rarityContainer: HTMLDivElement =
-							document.createElement("div");
-						const rarityRank: HTMLDivElement = document.createElement("div");
-						const rarityPercent: HTMLDivElement = document.createElement("div");
+				let element: any = document.querySelectorAll(".lazyload-wrapper");
+				if (element) {
+					element.forEach((content: any) => {
+						if (
+							content?.getElementsByClassName("traitsurfer-rarity-container")
+								.length === 0
+						) {
+							const rarityContainer: HTMLDivElement =
+								document.createElement("div");
+							const rarityRank: HTMLDivElement = document.createElement("div");
+							const rarityPercent: HTMLDivElement =
+								document.createElement("div");
 
-						rarityContainer.className = "traitsurfer-rarity-container";
-						rarityContainer.style.cssText =
-							"margin-top: 0; border-radius: 0px; background-color: #21262A";
-						rarityRank.className = "traitsurfer-rarity-rank";
-						rarityPercent.className = "traitsurfer-rarity-percentage";
-						rarityPercent.style.cssText =
-							"color: #000;background-color: #2DE370;";
-						for (let item in contentData) {
-							let temptoken: string = content
-								?.querySelectorAll("a")[0]
-								?.href?.split("/")[5];
+							rarityContainer.className = "traitsurfer-rarity-container";
+							rarityContainer.style.cssText =
+								"margin-top: 0; border-radius: 0px;background-color: inherit;";
+							rarityRank.className = "traitsurfer-rarity-rank";
+							rarityPercent.className = "traitsurfer-rarity-percentage";
+							rarityPercent.style.cssText =
+								"color: #000;background-color: #2DE370;";
+							for (let item in contentData) {
+								let temptoken: string = content
+									?.querySelectorAll("a")[0]
+									?.href?.split("/")[5];
 
-							if (contentData[item]?.tokenid === temptoken) {
-								rarityRank.innerHTML = `${contentData[item]?.rank} / ${contentData.length}`;
-								rarityPercent.innerHTML = `${(
-									(contentData[item]?.rank / contentData.length) *
-									100
-								).toFixed(1)} %`;
-								rarityContainer.appendChild(rarityRank);
-								rarityContainer.appendChild(rarityPercent);
-								content?.prepend(rarityContainer);
+								if (contentData[item]?.tokenid === temptoken) {
+									rarityRank.innerHTML = `${contentData[item]?.rank} / ${contentData.length}`;
+									rarityPercent.innerHTML = `${(
+										(contentData[item]?.rank / contentData.length) *
+										100
+									).toFixed(1)} %`;
+									rarityContainer.appendChild(rarityRank);
+									rarityContainer.appendChild(rarityPercent);
+									content?.querySelectorAll("a")[0]?.prepend(rarityContainer);
+								}
 							}
 						}
-					}
+					});
 				}
 			} else {
 				if (!contentData.includes("error")) {

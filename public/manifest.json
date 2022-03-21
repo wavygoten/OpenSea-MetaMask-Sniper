@@ -1,36 +1,36 @@
 {
-  "name": "TraitSurfer",
-  "description": "Snipe NFTs, display rarity on OpenSea and LooksRare, and more.",
-  "manifest_version": 2,
-  "version": "1.0.13",
-  "icons": {
-    "16": "./assets/Sharingan.png",
-    "48": "./assets/Sharingan.png",
-    "128": "./assets/Sharingan.png"
-  },
-  "browser_action": {
-    "default_icon": {
-      "16": "./assets/Sharingan.png",
-      "48": "./assets/Sharingan.png"
-    },
-    "default_popup": "popup.html"
-  },
-  "web_accessible_resources": ["autosnipe.html"],
-  "permissions": ["tabs", "storage", "https://traitsurfer.app/api/*"],
-  "background": {
-    "scripts": ["./js/background.js"],
-    "persistent": true
-  },
-  "content_scripts": [
-    {
-      "matches": [
-        "https://opensea.io/*",
-        "https://looksrare.org/*",
-        "https://stockx.com/*"
-      ],
-      "js": ["./js/content.js"],
-      "all_frames": true,
-      "run_at": "document_end"
-    }
-  ]
+	"name": "TraitSurfer",
+	"description": "Snipe NFTs, display rarity on OpenSea and LooksRare, and more.",
+	"manifest_version": 2,
+	"version": "1.0.13",
+	"icons": {
+		"16": "./assets/Sharingan.png",
+		"48": "./assets/Sharingan.png",
+		"128": "./assets/Sharingan.png"
+	},
+	"browser_action": {
+		"default_icon": {
+			"16": "./assets/Sharingan.png",
+			"48": "./assets/Sharingan.png"
+		},
+		"default_popup": "popup.html"
+	},
+	"web_accessible_resources": ["autosnipe.html"],
+	"permissions": ["tabs", "storage", "https://traitsurfer.app/api/*"],
+	"background": {
+		"scripts": ["./js/background.js"],
+		"persistent": true
+	},
+	"content_scripts": [
+		{
+			"matches": [
+				"https://opensea.io/*",
+				"https://looksrare.org/*",
+				"https://stockx.com/*"
+			],
+			"js": ["./js/content.js"],
+			"all_frames": true,
+			"run_at": "document_end"
+		}
+	]
 }
