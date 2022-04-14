@@ -66,8 +66,6 @@ const Autosnipe = () => {
         collection_slug: collectionSlug,
         event_type: "created",
         only_opensea: "false",
-        offset: "0",
-        limit: "30",
       });
       axios({
         method: "GET",
@@ -93,8 +91,6 @@ const Autosnipe = () => {
           collection_slug: collectionSlug,
           event_type: "created",
           only_opensea: "false",
-          offset: "0",
-          limit: "30",
         });
         axios({
           method: "GET",
