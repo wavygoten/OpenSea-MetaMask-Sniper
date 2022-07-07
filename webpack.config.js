@@ -3,6 +3,7 @@ const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 const WebpackObfuscator = require("webpack-obfuscator");
+const Dotenv = require("dotenv-webpack");
 
 const config = {
   entry: {
@@ -90,6 +91,7 @@ const config = {
       },
       ["/node_modules/"]
     ),
+    new Dotenv(),
   ],
 };
 

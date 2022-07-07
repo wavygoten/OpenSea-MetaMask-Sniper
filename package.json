@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "start": "webpack --watch",
-    "git": "git add . && git commit -m 'fix' && git push -u origin ethersjs"
+    "git": "git add . && git commit -m 'fix' && git push -u origin main"
   },
   "keywords": [],
   "license": "ISC",
@@ -24,6 +24,7 @@
     "copy-webpack-plugin": "^6.2.1",
     "cross-env": "^7.0.3",
     "css-loader": "^5.0.0",
+    "dotenv-webpack": "^7.1.1",
     "file-loader": "^6.1.1",
     "javascript-obfuscator": "^3.0.0",
     "node-polyfill-webpack-plugin": "^1.1.4",

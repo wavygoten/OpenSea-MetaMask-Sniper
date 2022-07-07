@@ -245,7 +245,7 @@ channel.onmessage = async (msg: any) => {
     customHttpProvider = new providers.Web3Provider(provider);
     seaport = new OpenSeaPort(provider, {
       networkName: Network.Main,
-      apiKey: "6a5959ab6ed841278cb3545d4f4acc4a",
+      apiKey: `${process.env.OS_API_KEY}`,
     });
     // alternateSeaport = new OpenSeaPort(cloudflareProvider, {
     //   networkName: Network.Main,

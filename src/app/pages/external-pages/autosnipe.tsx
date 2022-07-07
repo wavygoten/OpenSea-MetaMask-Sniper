@@ -72,7 +72,7 @@ const Autosnipe = () => {
         url: `https://api.opensea.io/api/v1/events?${URLPARAMS}`,
         headers: {
           Accept: "application/json",
-          "X-API-KEY": "6a5959ab6ed841278cb3545d4f4acc4a",
+          "X-API-KEY": `${process.env.OS_API_KEY}`,
         },
       })
         .then((res: any) => {
@@ -97,7 +97,7 @@ const Autosnipe = () => {
           url: `https://api.opensea.io/api/v1/events?${URLPARAMS}`,
           headers: {
             Accept: "application/json",
-            "X-API-KEY": "6a5959ab6ed841278cb3545d4f4acc4a",
+            "X-API-KEY": `${process.env.OS_API_KEY}`,
           },
         })
           .then((res: any) => {
