@@ -73,6 +73,7 @@ const config = {
     },
     fallback: {
       http: require.resolve("stream-http"),
+      fs: false,
     },
   },
   devServer: {
