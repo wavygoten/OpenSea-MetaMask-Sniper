@@ -27,6 +27,7 @@ const App = () => {
   const [openseatoggle, openseaToggleIsOn] = React.useState<boolean>(false);
   const [looksraretoggle, looksrareToggleIsOn] = React.useState<boolean>(false);
   const [stockxtoggle, stockxToggleIsOn] = React.useState<boolean>(false);
+  const [x2y2toggle, x2y2ToggleIsOn] = React.useState<boolean>(false);
   const [autofilltoggle, autofillToggleIsOn] = React.useState<boolean>(false);
 
   const handleChange = async (e: any) => {
@@ -56,6 +57,10 @@ const App = () => {
     stockxToggle() {
       chrome.storage.local.set({ stockx: !stockxtoggle });
       stockxToggleIsOn(!stockxtoggle);
+    }
+    x2y2Toggle() {
+      chrome.storage.local.set({ x2y2: !x2y2toggle });
+      x2y2ToggleIsOn(!x2y2toggle);
     }
 
     autofillToggle() {
@@ -123,6 +128,11 @@ const App = () => {
         stockxToggleIsOn(res?.stockx);
       }
     });
+    chrome.storage.local.get(["x2y2"], (res: any) => {
+      if (res?.x2y2) {
+        x2y2ToggleIsOn(res?.x2y2);
+      }
+    });
 
     return () => {
       setMmid("");
@@ -132,6 +142,7 @@ const App = () => {
       openseaToggleIsOn(false);
       looksrareToggleIsOn(false);
       stockxToggleIsOn(false);
+      x2y2ToggleIsOn(false);
     };
   }, []);
 
@@ -183,7 +194,7 @@ const App = () => {
                     openseaToggle={openseatoggle}
                     looksrareToggle={looksraretoggle}
                     stockxToggle={stockxtoggle}
-                    autofillToggle={autofilltoggle}
+                    x2yxToggle={x2y2toggle}
                   />
                 }
               />

@@ -20,7 +20,7 @@ type Props = {
   openseaToggle?: boolean;
   looksrareToggle?: boolean;
   stockxToggle?: boolean;
-  autofillToggle?: boolean;
+  x2yxToggle?: boolean;
 };
 
 const Settings = (props: Props) => {
@@ -52,7 +52,7 @@ const Settings = (props: Props) => {
             width: 100%;
           `}
         >
-          <div>Opensea</div>
+          <div>OpenSea</div>
 
           <BasicSwitch
             onChange={props.handleToggles.openseaToggle}
@@ -84,11 +84,10 @@ const Settings = (props: Props) => {
             width: 100%;
           `}
         >
-          <div>Stockx</div>
-
+          <div>X2Y2</div>
           <BasicSwitch
-            onChange={props.handleToggles.stockxToggle}
-            checked={props.stockxToggle}
+            onChange={props.handleToggles.x2y2Toggle}
+            checked={props.x2yxToggle}
           />
         </Header>
         <Header
@@ -100,11 +99,11 @@ const Settings = (props: Props) => {
             width: 100%;
           `}
         >
-          <div>Autofill</div>
+          <div>StockX</div>
 
           <BasicSwitch
-            onChange={props.handleToggles.autofillToggle}
-            checked={props.autofillToggle}
+            onChange={props.handleToggles.stockxToggle}
+            checked={props.stockxToggle}
           />
         </Header>
       </Col>

@@ -38,6 +38,56 @@ chrome.runtime.onMessage.addListener(async function (
     //   }
     // }
   }
+  if (request?.scanCollection) {
+    fetch("https://traitsurfer.app/api/blockchainscrape", {
+      body: JSON.stringify({ contractAddress: request?.scanCollection }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    })
+      .then((res: any) => res.json())
+      .then((data: any) => {
+        if (data.success) {
+          success = {
+            success: true,
+            message: `${request?.scanCollection} has finished indexing, please refresh the collection page`,
+          };
+          chrome.tabs.query(
+            { active: true, currentWindow: true },
+            function (tabs: any) {
+              chrome.tabs.sendMessage(sender.tab.id, { success });
+            }
+          );
+        } else {
+          error = {
+            error: false,
+            message: "Failed to index, contract may be already indexed",
+          };
+          chrome.tabs.query(
+            { active: true, currentWindow: true },
+            function (tabs: any) {
+              chrome.tabs.sendMessage(sender.tab.id, { error });
+            }
+          );
+          //idk
+        }
+      })
+      .catch((err: any) => {
+        // send error message here
+        console.log(err?.message);
+        error = {
+          error: false,
+          message: `Indexing error, please make a ticket in the discord - ${err?.message}`,
+        };
+        chrome.tabs.query(
+          { active: true, currentWindow: true },
+          function (tabs: any) {
+            chrome.tabs.sendMessage(sender.tab.id, { error });
+          }
+        );
+      });
+  }
   if (request?.getContractData) {
     chrome.tabs.sendMessage(sender.tab.id, { mainData: mainData });
   }
@@ -62,7 +112,7 @@ chrome.runtime.onMessage.addListener(async function (
       .catch((err: any) => {
         console.log(err);
       });
-    console.log(mainData);
+    // console.log(mainData);
   }
   if (request?.params) {
     if (!signature) {

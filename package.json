@@ -51,12 +51,13 @@
     "history": "^5.1.0",
     "metamask-extension-provider": "^3.0.0",
     "notyf": "^3.10.0",
-    "opensea-js": "^2.0.0",
+    "opensea-js": "^4.0.4",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-hot-loader": "^4.13.0",
     "react-icons": "^4.3.1",
     "react-router-dom": "^6.2.1",
+    "tippy.js": "^6.3.7",
     "twin.macro": "^2.8.2",
     "use-sound": "^4.0.1"
   }

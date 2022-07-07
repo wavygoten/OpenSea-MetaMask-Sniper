@@ -11,6 +11,40 @@
   font-size: 16px;
   white-space: nowrap;
 }
+.tippy-box[data-theme~="ts-tip"] {
+  padding: 0.5rem;
+  background-color: rgb(76, 80, 92);
+  font-style: oblique;
+}
+
+.tippy-box[data-placement^="top"] > .tippy-arrow:before {
+  border-top-color: rgb(
+    76,
+    80,
+    92
+  ) !important; /* set your color here and use the !important property */
+}
+
+.traitsurfer-scan-item {
+  background: rgb(32, 34, 37);
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 12px;
+  border: none;
+  border-radius: 50%;
+}
+.traitsurfer-scan-item:hover {
+  transition: all 0.2s ease 0s;
+  box-shadow: rgb(4 17 29 / 25%) 0px 0px 8px 0px;
+  color: rgb(255, 255, 255);
+  background-color: rgb(76, 80, 92);
+}
+
 .traitsurfer-rarity-container {
   margin-top: 4px;
   background-color: #111314;
