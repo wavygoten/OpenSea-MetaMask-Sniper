@@ -2,6 +2,8 @@
 
 ## Getting started
 
+# OUTDATED PLEASE DO NOT USE ONLY FOR DISPLAY
+
 Create a project based on this boilerplate.
 
 ```
